@@ -26,36 +26,44 @@
   </header>
 
   <main>
-    <section class="hero" id="home">
-      <div class="hero-video" aria-hidden="true">
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/BWeSmA3-_S8?autoplay=1&mute=1&loop=1&playlist=BWeSmA3-_S8&controls=0&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1"
-          title="Pro League Soccer gameplay"
-          frameborder="0"
-          allow="autoplay; encrypted-media; picture-in-picture"
-          referrerpolicy="strict-origin-when-cross-origin"
-          tabindex="-1"
-        ></iframe>
+    <section class="hero game-hero" id="home">
+      <div class="hero-slides" aria-label="Rasu Games featured games">
+        <article class="hero-slide active" data-game="pls" data-video="BWeSmA3-_S8">
+          <div class="hero-video" aria-hidden="true"><iframe title="Pro League Soccer gameplay" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1"></iframe></div>
+          <div class="hero-bg"></div>
+          <div class="hero-grid"></div>
+          <div class="hero-content reveal visible">
+            <p class="eyebrow"><span></span> RASU GAMES PRESENTS</p>
+            <h1>PRO LEAGUE<br /><em>SOCCER.</em></h1>
+            <p class="hero-copy">Real-time football. Deep customization. Build your squad, shape your club and play the game your way.</p>
+            <div class="hero-actions">
+              <a class="store-btn primary" href="https://play.google.com/store/apps/details?id=com.rasugames.pls&hl=en" target="_blank" rel="noreferrer"><span class="store-icon">▶</span><span><small>GET IT ON</small>Google Play</span></a>
+              <a class="store-btn secondary" href="https://apps.apple.com/us/app/pro-league-soccer/id1580053372" target="_blank" rel="noreferrer"><span class="store-icon"></span><span><small>DOWNLOAD ON THE</small>App Store</span></a>
+            </div>
+            <div class="hero-proof"><div><strong>3.7★</strong><span>STARS</span></div><div><strong>458K</strong><span>REVIEWS</span></div><div><strong>100M+</strong><span>DOWNLOADS</span></div></div>
+          </div>
+        </article>
+
+        <article class="hero-slide" data-game="pks" data-video="BCjPkGePO7c">
+          <div class="hero-video" aria-hidden="true"><iframe title="Pro Kick Soccer gameplay" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1"></iframe></div>
+          <div class="hero-bg"></div>
+          <div class="hero-grid"></div>
+          <div class="hero-content">
+            <p class="eyebrow"><span></span> RASU GAMES PRESENTS</p>
+            <h1>PRO KICK<br /><em>SOCCER.</em></h1>
+            <p class="hero-copy">Fast football action built for quick matches, sharp moments and players who just want to kick off.</p>
+            <div class="hero-actions">
+              <a class="store-btn primary" href="https://play.google.com/store/apps/details?id=com.rasugames.pks&hl=en" target="_blank" rel="noreferrer"><span class="store-icon">▶</span><span><small>GET IT ON</small>Google Play</span></a>
+              <a class="store-btn secondary" href="https://apps.apple.com/us/app/pro-kick-soccer/id1593905407" target="_blank" rel="noreferrer"><span class="store-icon"></span><span><small>DOWNLOAD ON THE</small>App Store</span></a>
+            </div>
+            <div class="hero-proof"><div><strong>3.7★</strong><span>STARS</span></div><div><strong>33.7K</strong><span>REVIEWS</span></div><div><strong>10M+</strong><span>DOWNLOADS</span></div></div>
+          </div>
+        </article>
       </div>
-      <div class="hero-bg"></div>
-      <div class="hero-grid"></div>
-      <div class="hero-content reveal">
-        <p class="eyebrow"><span></span> RASU GAMES PRESENTS</p>
-        <h1>THE FOOTBALL<br /><em>GAME YOU CONTROL.</em></h1>
-        <p class="hero-copy">Real-time football. Deep customization. Build your squad, shape your club and play the game your way.</p>
-        <div class="hero-actions">
-          <a class="store-btn primary" href="https://play.google.com/store/apps/details?id=com.rasugames.pls&hl=en" target="_blank" rel="noreferrer">
-            <span class="store-icon">▶</span><span><small>GET IT ON</small>Google Play</span>
-          </a>
-          <a class="store-btn secondary" href="#games"><span class="play-circle">→</span><span><small>DISCOVER</small>Our Games</span></a>
-        </div>
-        <div class="hero-proof">
-          <div><strong>100M+</strong><span>DOWNLOADS</span></div>
-          <div><strong>4.4★</strong><span>PLAYER RATING</span></div>
-          <div><strong>GLOBAL</strong><span>COMMUNITY</span></div>
-        </div>
+      <div class="hero-slide-controls" aria-label="Choose game">
+        <button class="hero-dot active" data-slide="0" aria-label="Pro League Soccer">01 <span>PRO LEAGUE SOCCER</span></button>
+        <button class="hero-dot" data-slide="1" aria-label="Pro Kick Soccer">02 <span>PRO KICK SOCCER</span></button>
       </div>
-      <div class="hero-player" aria-hidden="true"></div>
       <div class="hero-scroll">SCROLL TO EXPLORE <span>↓</span></div>
     </section>
 
@@ -71,18 +79,60 @@
       </div>
     </section>
 
-    <section class="showcase" id="games">
-      <div class="showcase-copy reveal">
-        <p class="eyebrow"><span></span> OUR FLAGSHIP GAME</p>
+    <section class="showcase games-showcase" id="games">
+      <div class="showcase-copy reveal visible">
+        <p class="eyebrow"><span></span> OUR GAMES</p>
         <div class="game-number">01</div>
-        <h2>PRO LEAGUE<br /><em>SOCCER.</em></h2>
-        <p>Take control of every part of your football experience. Compete, manage and customize in a fast, accessible football simulation built for fans.</p>
-        <div class="tag-row"><span>REAL-TIME MATCHES</span><span>TEAM EDITOR</span><span>OFFLINE PLAY</span></div>
-        <a class="text-link" href="https://play.google.com/store/apps/details?id=com.rasugames.pls&hl=en" target="_blank" rel="noreferrer">VIEW GAME <b>↗</b></a>
+        <h2>CHOOSE YOUR<br /><em>GAME.</em></h2>
+        <p class="showcase-intro">Two football experiences. One studio. Choose a game below to reveal its logo, artwork and download links.</p>
+
+        <div class="game-picker" aria-label="Choose your game">
+          <p class="picker-label">CHOOSE YOUR GAME <b>↗</b></p>
+          <div class="game-picker-buttons">
+            <button class="game-picker-btn active" data-game-choice="pls">
+              <span class="choice-num">01</span>
+              <span class="choice-main"><strong>PRO LEAGUE SOCCER</strong></span>
+              <b>↗</b>
+            </button>
+            <button class="game-picker-btn" data-game-choice="pks">
+              <span class="choice-num">02</span>
+              <span class="choice-main"><strong>PRO KICK SOCCER</strong></span>
+              <b>↗</b>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="showcase-image reveal">
-        <div class="image-frame"><img src="/assets/hero-player.png" alt="Footballer under stadium lights" /></div>
-        <div class="floating-stat"><span>PLAYERS</span><strong>∞</strong><small>YOUR GAME<br />YOUR RULES</small></div>
+
+      <div class="showcase-image reveal visible">
+        <div class="game-showcase-card" data-showcase-game="pls">
+          <div class="selected-game-head"><span>SELECTED GAME</span><strong>PRO LEAGUE SOCCER</strong></div>
+          <div class="game-logo-wrap"><img src="/assets/pls-logo.svg" alt="Pro League Soccer logo" /></div>
+          <div class="image-frame"><img src="/assets/pls-cover.png" alt="Pro League Soccer" /></div>
+          <div class="game-stats" aria-label="Pro League Soccer statistics">
+            <div><strong>3.7</strong><span>STARS</span></div>
+            <div><strong>458K</strong><span>REVIEWS</span></div>
+            <div><strong>100M+</strong><span>DOWNLOADS</span></div>
+          </div>
+          <div class="game-store-links">
+            <a class="mini-store android" href="https://play.google.com/store/apps/details?id=com.rasugames.pls&hl=en" target="_blank" rel="noreferrer"><span>▶</span> GOOGLE PLAY</a>
+            <a class="mini-store ios" href="https://apps.apple.com/us/app/pro-league-soccer/id1580053372" target="_blank" rel="noreferrer"><span></span> APP STORE</a>
+          </div>
+        </div>
+
+        <div class="game-showcase-card hidden" data-showcase-game="pks">
+          <div class="selected-game-head"><span>SELECTED GAME</span><strong>PRO KICK SOCCER</strong></div>
+          <div class="game-logo-wrap pks-logo"><img src="/assets/pks-logo.svg" alt="Pro Kick Soccer logo" /></div>
+          <div class="image-frame pks-frame"><div class="pks-art"><div class="pks-ball">⚽</div><div class="pks-lines"></div><strong>PRO KICK<br />SOCCER</strong><small>FAST FOOTBALL ACTION</small></div></div>
+          <div class="game-stats" aria-label="Pro Kick Soccer statistics">
+            <div><strong>3.7</strong><span>STARS</span></div>
+            <div><strong>33.7K</strong><span>REVIEWS</span></div>
+            <div><strong>10M+</strong><span>DOWNLOADS</span></div>
+          </div>
+          <div class="game-store-links">
+            <a class="mini-store android" href="https://play.google.com/store/apps/details?id=com.rasugames.pks&hl=en" target="_blank" rel="noreferrer"><span>▶</span> GOOGLE PLAY</a>
+            <a class="mini-store ios" href="https://apps.apple.com/us/app/pro-kick-soccer/id1593905407" target="_blank" rel="noreferrer"><span></span> APP STORE</a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -102,6 +152,78 @@
         <article class="news-card featured reveal"><div class="news-image n1"><span>UPDATE</span></div><div class="news-body"><small>SEP 2026</small><h3>New update. More football.</h3><p>Fresh improvements, gameplay refinements and new ways to shape your squad.</p><a href="#contact">READ MORE ↗</a></div></article>
         <article class="news-card reveal"><div class="news-image n2"><span>FEATURE</span></div><div class="news-body"><small>AUG 2026</small><h3>Build your dream team</h3><p>More control over players, kits and the way your club looks.</p><a href="#contact">READ MORE ↗</a></div></article>
         <article class="news-card reveal"><div class="news-image n3"><span>COMMUNITY</span></div><div class="news-body"><small>JUL 2026</small><h3>Built with football fans</h3><p>Discover what the community is playing, creating and sharing.</p><a href="#contact">READ MORE ↗</a></div></article>
+      </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+      <div class="contact-grid">
+        <div class="contact-copy reveal">
+          <p class="eyebrow"><span></span> CONTACT RASU GAMES</p>
+          <h2>LET'S TALK<br /><em>FOOTBALL.</em></h2>
+          <p class="contact-lead">Have feedback, found a bug, want to work with us, or have a business proposal? Choose a topic and send the team a message.</p>
+          <div class="contact-topics">
+            <div><span>01</span><strong>Game feedback</strong><small>Ideas, suggestions and gameplay feedback.</small></div>
+            <div><span>02</span><strong>Bug report</strong><small>Technical issues with an optional screenshot.</small></div>
+            <div><span>03</span><strong>Business & partnerships</strong><small>Sponsorships, publishing and commercial proposals.</small></div>
+            <div><span>04</span><strong>Press & media</strong><small>Press, creators, interviews and media requests.</small></div>
+          </div>
+        </div>
+
+        <div class="contact-form-card reveal">
+          <form id="contactForm" class="contact-form" novalidate>
+            <div class="form-row two">
+              <label><span>Name *</span><input type="text" name="name" autocomplete="name" required placeholder="Your name" /></label>
+              <label><span>Email *</span><input type="email" name="email" autocomplete="email" required placeholder="you@example.com" /></label>
+            </div>
+            <div class="form-row">
+              <label><span>Topic *</span>
+                <select name="topic" id="contactTopic" required>
+                  <option value="" selected disabled>Select a topic</option>
+                  <option value="game-feedback">Game feedback / suggestion</option>
+                  <option value="bug-report">Bug report / technical issue</option>
+                  <option value="account-support">Account / purchase support</option>
+                  <option value="business">Business / sponsorship / partnership</option>
+                  <option value="press">Press / media / creator</option>
+                  <option value="careers">Careers / recruitment</option>
+                  <option value="privacy">Privacy / legal</option>
+                  <option value="other">Other</option>
+                </select>
+              </label>
+            </div>
+            <div class="form-row two">
+              <label><span>Game</span>
+                <select name="game">
+                  <option value="">Not game-specific</option>
+                  <option>Pro League Soccer</option>
+                  <option>Pro Kick Soccer</option>
+                </select>
+              </label>
+              <label><span>Platform</span>
+                <select name="platform">
+                  <option value="">Select platform</option>
+                  <option>Android</option>
+                  <option>iOS</option>
+                  <option>Windows</option>
+                  <option>Other</option>
+                </select>
+              </label>
+            </div>
+            <div class="bug-fields" id="bugFields" hidden>
+              <div class="form-row two">
+                <label><span>Game version</span><input type="text" name="version" placeholder="e.g. 1.0.45" /></label>
+                <label><span>Device model</span><input type="text" name="device" placeholder="e.g. Galaxy S24" /></label>
+              </div>
+              <label class="file-field"><span>Bug screenshot</span><input type="file" name="attachment" id="bugAttachment" accept="image/png,image/jpeg,image/webp" /><small>PNG, JPG or WEBP · up to 10 MB</small></label>
+            </div>
+            <div class="form-row">
+              <label><span>Message *</span><textarea name="message" rows="6" required placeholder="Tell us what happened or what you would like to discuss..."></textarea></label>
+            </div>
+            <label class="consent"><input type="checkbox" name="consent" required /><span>I agree that Rasu Games may use the information in this form to respond to my request.</span></label>
+            <button class="contact-submit" type="submit">SEND MESSAGE <span>↗</span></button>
+            <p class="form-note">For bug reports, please include the game version, device and steps to reproduce when possible.</p>
+            <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+          </form>
+        </div>
       </div>
     </section>
 
