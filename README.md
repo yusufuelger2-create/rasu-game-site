@@ -30,3 +30,10 @@ npm run dev
 ## Notes
 
 The page is intentionally implemented as a clean studio redesign rather than a pixel-for-pixel copy. Replace the local hero artwork and placeholder news imagery with Rasu Games' licensed production assets before publishing.
+
+
+## Hero video
+The homepage hero uses the supplied YouTube gameplay video as a muted, looping background embed:
+https://www.youtube.com/watch?v=BWeSmA3-_S8
+
+Autoplay requires the video to start muted in modern browsers. The embed uses `youtube-nocookie.com` and does not expose YouTube controls in the hero.
