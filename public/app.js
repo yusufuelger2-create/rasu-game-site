@@ -1,16 +1,10 @@
 const cursorGlow = document.querySelector('.cursor-glow');
-
 window.addEventListener('pointermove', (e) => {
   if (cursorGlow) {
     cursorGlow.style.left = `${e.clientX}px`;
     cursorGlow.style.top = `${e.clientY}px`;
   }
 });
-
-
-// ============================================================
-// REVEAL ANIMATIONS
-// ============================================================
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -19,26 +13,17 @@ const observer = new IntersectionObserver((entries) => {
       observer.unobserve(entry.target);
     }
   });
-}, {
-  threshold: 0.12
-});
+}, { threshold: 0.12 });
 
 document.querySelectorAll('.reveal').forEach((el, i) => {
   el.style.transitionDelay = `${Math.min(i * 50, 250)}ms`;
   observer.observe(el);
 });
 
-
-// ============================================================
-// MOBILE MENU
-// ============================================================
-
 const menu = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.desktop-nav');
-
 menu?.addEventListener('click', () => {
   const open = menu.getAttribute('aria-expanded') === 'true';
-
   menu.setAttribute('aria-expanded', String(!open));
   nav?.classList.toggle('mobile-open', !open);
 });
@@ -50,880 +35,283 @@ document.querySelectorAll('.desktop-nav a').forEach((link) => {
   });
 });
 
-
-// ============================================================
-// HERO GAME SLIDER
-// ============================================================
-
+// Featured game slider: Pro League Soccer first, then Pro Kick Soccer.
 const slides = [...document.querySelectorAll('.hero-slide')];
 const dots = [...document.querySelectorAll('.hero-dot')];
-
 let currentSlide = 0;
 let sliderTimer;
-
 
 function videoUrl(id) {
   return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`;
 }
 
-
 function loadVideo(slide) {
   const iframe = slide.querySelector('iframe');
-
-  if (!iframe || iframe.src) {
-    return;
-  }
-
+  if (!iframe || iframe.src) return;
   iframe.src = videoUrl(slide.dataset.video);
 }
 
-
 function unloadVideo(slide) {
   const iframe = slide.querySelector('iframe');
-
-  if (iframe) {
-    iframe.removeAttribute('src');
-  }
+  if (iframe) iframe.removeAttribute('src');
 }
 
-
 function showSlide(index) {
-  if (!slides.length) {
-    return;
-  }
-
+  if (!slides.length) return;
   currentSlide = (index + slides.length) % slides.length;
 
   slides.forEach((slide, i) => {
     slide.classList.toggle('active', i === currentSlide);
-
-    if (i !== currentSlide) {
-      unloadVideo(slide);
-    }
+    if (i !== currentSlide) unloadVideo(slide);
   });
 
-  dots.forEach((dot, i) => {
-    dot.classList.toggle('active', i === currentSlide);
-  });
-
+  dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
   loadVideo(slides[currentSlide]);
 
   clearTimeout(sliderTimer);
-
-  sliderTimer = setTimeout(() => {
-    showSlide(currentSlide + 1);
-  }, 10000);
+  sliderTimer = setTimeout(() => showSlide(currentSlide + 1), 10000);
 }
 
-
 dots.forEach((dot, index) => {
-  dot.addEventListener('click', () => {
-    showSlide(index);
-  });
+  dot.addEventListener('click', () => showSlide(index));
 });
 
 showSlide(0);
 
-
-// Pause automatic switching while pointer is over controls.
-
+// Pause automatic switching while the pointer is over the controls.
 const heroControls = document.querySelector('.hero-slide-controls');
-
-heroControls?.addEventListener('mouseenter', () => {
-  clearTimeout(sliderTimer);
-});
-
+heroControls?.addEventListener('mouseenter', () => clearTimeout(sliderTimer));
 heroControls?.addEventListener('mouseleave', () => {
   clearTimeout(sliderTimer);
-
-  sliderTimer = setTimeout(() => {
-    showSlide(currentSlide + 1);
-  }, 10000);
+  sliderTimer = setTimeout(() => showSlide(currentSlide + 1), 10000);
 });
 
-
-// ============================================================
-// GAME PICKER
-// ============================================================
-
-const gamePickerButtons = [
-  ...document.querySelectorAll('.game-picker-btn')
-];
-
-const gameShowcaseCards = [
-  ...document.querySelectorAll('.game-showcase-card')
-];
-
+// Games section picker: switch the logo, artwork and store links without leaving the page.
+const gamePickerButtons = [...document.querySelectorAll('.game-picker-btn')];
+const gameShowcaseCards = [...document.querySelectorAll('.game-showcase-card')];
 const gameNumber = document.querySelector('.game-number');
-
 const showcaseTitle = document.querySelector('.showcase h2');
-
-const showcaseCopy = document.querySelector(
-  '.showcase-copy>p:not(.eyebrow)'
-);
-
+const showcaseCopy = document.querySelector('.showcase-copy>p:not(.eyebrow)');
 const showcaseTags = document.querySelector('.tag-row');
 
-
 const showcaseData = {
-
   pls: {
     number: '01',
-
     title: 'TWO GAMES.<br /><em>ONE STUDIO.</em>',
-
-    copy:
-      'Pro League Soccer puts you in control with deep football simulation, squad building and customization across Android and iOS.',
-
-    tags: [
-      'PRO LEAGUE SOCCER',
-      'ANDROID + IOS',
-      'FOOTBALL SIMULATION'
-    ]
+    copy: 'Pro League Soccer puts you in control with deep football simulation, squad building and customization across Android and iOS.',
+    tags: ['PRO LEAGUE SOCCER', 'ANDROID + IOS', 'FOOTBALL SIMULATION']
   },
-
   pks: {
     number: '02',
-
     title: 'FAST FOOTBALL.<br /><em>PURE ACTION.</em>',
-
-    copy:
-      'Pro Kick Soccer is built for quick matches, sharp moments and accessible football action across Android and iOS.',
-
-    tags: [
-      'PRO KICK SOCCER',
-      'ANDROID + IOS',
-      'FAST MATCHES'
-    ]
+    copy: 'Pro Kick Soccer is built for quick matches, sharp moments and accessible football action across Android and iOS.',
+    tags: ['PRO KICK SOCCER', 'ANDROID + IOS', 'FAST MATCHES']
   }
-
 };
 
-
 function chooseGame(game) {
-
   const data = showcaseData[game];
-
-  if (!data) {
-    return;
-  }
-
-  gamePickerButtons.forEach((btn) => {
-    btn.classList.toggle(
-      'active',
-      btn.dataset.gameChoice === game
-    );
+  if (!data) return;
+  gamePickerButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.gameChoice === game));
+  gameShowcaseCards.forEach(card => {
+    const selected = card.dataset.showcaseGame === game;
+    card.classList.toggle('hidden', !selected);
+    if (selected) { card.style.animation = 'none'; void card.offsetWidth; card.style.animation = ''; }
   });
-
-
-  gameShowcaseCards.forEach((card) => {
-
-    const selected =
-      card.dataset.showcaseGame === game;
-
-    card.classList.toggle(
-      'hidden',
-      !selected
-    );
-
-    if (selected) {
-
-      card.style.animation = 'none';
-
-      void card.offsetWidth;
-
-      card.style.animation = '';
-
-    }
-
-  });
-
-
-  if (gameNumber) {
-    gameNumber.textContent = data.number;
-  }
-
+  if (gameNumber) gameNumber.textContent = data.number;
 }
 
-
-gamePickerButtons.forEach((btn) => {
-
-  btn.addEventListener('click', () => {
-
-    chooseGame(
-      btn.dataset.gameChoice
-    );
-
-  });
-
-});
-
-
+gamePickerButtons.forEach(btn => btn.addEventListener('click', () => chooseGame(btn.dataset.gameChoice)));
 chooseGame('pls');
 
-
-// ============================================================
-// CONTACT FORM
-// ============================================================
-
-const contactTopic =
-  document.querySelector('#contactTopic');
-
-const bugFields =
-  document.querySelector('#bugFields');
-
-const bugAttachment =
-  document.querySelector('#bugAttachment');
-
-const contactForm =
-  document.querySelector('#contactForm');
-
-const formStatus =
-  document.querySelector('#formStatus');
-
+// Contact form: reveal bug-specific fields and provide a safe local/demo submission flow.
+const contactTopic = document.querySelector('#contactTopic');
+const bugFields = document.querySelector('#bugFields');
+const bugAttachment = document.querySelector('#bugAttachment');
+const contactForm = document.querySelector('#contactForm');
+const formStatus = document.querySelector('#formStatus');
 
 function toggleBugFields() {
-
-  const isBug =
-    contactTopic?.value === 'bug-report';
-
-  if (bugFields) {
-    bugFields.hidden = !isBug;
-  }
-
-  if (!isBug && bugAttachment) {
-    bugAttachment.value = '';
-  }
-
+  const isBug = contactTopic?.value === 'bug-report';
+  if (bugFields) bugFields.hidden = !isBug;
+  if (!isBug && bugAttachment) bugAttachment.value = '';
 }
-
-
-contactTopic?.addEventListener(
-  'change',
-  toggleBugFields
-);
-
+contactTopic?.addEventListener('change', toggleBugFields);
 toggleBugFields();
 
-
-contactForm?.addEventListener(
-  'submit',
-  async (event) => {
-
-    event.preventDefault();
-
-
-    if (!contactForm.checkValidity()) {
-
-      contactForm.reportValidity();
-
-      return;
-    }
-
-
-    if (
-      bugAttachment?.files?.[0] &&
-      bugAttachment.files[0].size >
-        10 * 1024 * 1024
-    ) {
-
-      if (formStatus) {
-
-        formStatus.textContent =
-          'The screenshot must be 10 MB or smaller.';
-
-        formStatus.classList.add('error');
-
-      }
-
-      return;
-    }
-
-
-    if (formStatus) {
-
-      formStatus.classList.remove('error');
-
-      formStatus.textContent =
-        'Form validated. Connect your preferred email/form provider to receive submissions.';
-
-    }
-
-  }
-);
-
-
-// ============================================================
-// FOOTBALLER NAME GENERATOR
-// ============================================================
-//
-// Names are loaded from:
-//
-// /names.json
-//
-// JSON structure:
-//
-// {
-//   "countries": {
-//     "germany": {
-//       "label": "Germany",
-//       "flag": "🇩🇪",
-//       "firstNames": [],
-//       "lastNames": []
-//     }
-//   }
-// }
-//
-// Maximum generated names: 20
-// ============================================================
-
-
-const nameCountry =
-  document.querySelector('#nameCountry');
-
-const nameCount =
-  document.querySelector('#nameCount');
-
-const generateNamesButton =
-  document.querySelector('#generateNames');
-
-const copyNamesButton =
-  document.querySelector('#copyNames');
-
-const generatedCount =
-  document.querySelector('#generatedCount');
-
-const nameList =
-  document.querySelector('#nameList');
-
-
-let footballerNameData = null;
-
-let generatedNames = [];
-
-
-// ============================================================
-// LOAD NAMES.JSON
-// ============================================================
-
-async function loadFootballerNames() {
-
-  if (!generateNamesButton) {
+contactForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!contactForm.checkValidity()) {
+    contactForm.reportValidity();
     return;
   }
 
-  try {
-
-    const response =
-      await fetch('/names.json', {
-        cache: 'no-store'
-      });
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        `HTTP ${response.status}`
-      );
-
-    }
-
-
-    const data =
-      await response.json();
-
-
-    if (
-      !data ||
-      !data.countries ||
-      typeof data.countries !== 'object'
-    ) {
-
-      throw new Error(
-        'Invalid names.json structure'
-      );
-
-    }
-
-
-    footballerNameData = data;
-
-
-    generateNamesButton.disabled = false;
-
-
-    if (nameList) {
-
-      nameList.innerHTML =
-        '<div class="name-empty">Choose a country and generate your players.</div>';
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      'Could not load names.json:',
-      error
-    );
-
-
-    if (nameList) {
-
-      nameList.innerHTML =
-        '<div class="name-empty error">Name data could not be loaded. Please check names.json.</div>';
-
-    }
-
-
-    generateNamesButton.disabled = true;
-
-  }
-
-}
-
-
-// ============================================================
-// RANDOM ITEM
-// ============================================================
-
-function randomItem(items) {
-
-  if (!Array.isArray(items) || items.length === 0) {
-    return null;
-  }
-
-  return items[
-    Math.floor(
-      Math.random() * items.length
-    )
-  ];
-
-}
-
-
-// ============================================================
-// CREATE PLAYER NAME
-// ============================================================
-
-function createPlayerName(
-  countryData,
-  usedNames
-) {
-
-  if (
-    !countryData ||
-    !Array.isArray(countryData.firstNames) ||
-    !Array.isArray(countryData.lastNames)
-  ) {
-
-    return null;
-
-  }
-
-
-  if (
-    countryData.firstNames.length === 0 ||
-    countryData.lastNames.length === 0
-  ) {
-
-    return null;
-
-  }
-
-
-  const maxAttempts = 100;
-
-
-  for (
-    let attempt = 0;
-    attempt < maxAttempts;
-    attempt++
-  ) {
-
-    const firstName =
-      randomItem(countryData.firstNames);
-
-    const lastName =
-      randomItem(countryData.lastNames);
-
-
-    if (!firstName || !lastName) {
-      continue;
-    }
-
-
-    const fullName =
-      `${firstName} ${lastName}`;
-
-
-    if (!usedNames.has(fullName)) {
-
-      return fullName;
-
-    }
-
-  }
-
-
-  return null;
-
-}
-
-
-// ============================================================
-// RENDER GENERATED NAMES
-// ============================================================
-
-function renderGeneratedNames() {
-
-  if (!nameList || !generatedCount) {
+  if (bugAttachment?.files?.[0] && bugAttachment.files[0].size > 10 * 1024 * 1024) {
+    if (formStatus) { formStatus.textContent = 'The screenshot must be 10 MB or smaller.'; formStatus.classList.add('error'); }
     return;
   }
 
+  // The form UI is ready for a real mail provider. Keep the demo honest instead of pretending
+  // an email was sent when no provider credentials have been configured.
+  if (formStatus) {
+    formStatus.classList.remove('error');
+    formStatus.textContent = 'Form validated. Connect your preferred email/form provider to receive submissions.';
+  }
+});
 
-  const count =
-    generatedNames.length;
+// Footballer Name Generator
+(() => {
+  const countryEl = document.querySelector('#nameCountry');
+  const countEl = document.querySelector('#nameCount');
+  const countValueEl = document.querySelector('#nameCountValue');
+  const ratioEl = document.querySelector('#newNameRatio');
+  const ratioValueEl = document.querySelector('#newNameRatioValue');
+  const avoidRepeatsEl = document.querySelector('#avoidSessionRepeats');
+  const generateEl = document.querySelector('#generateNames');
+  const copyEl = document.querySelector('#copyNames');
+  const listEl = document.querySelector('#nameList');
+  const generatedCountEl = document.querySelector('#generatedCount');
 
+  if (!countryEl || !countEl || !ratioEl || !generateEl || !listEl) return;
 
-  generatedCount.textContent =
-    `${count} ${count === 1 ? 'PLAYER' : 'PLAYERS'}`;
+  const SESSION_KEY = 'rasu_generated_footballer_names_v2';
+  let nameData = null;
+  let generatedNames = [];
 
+  const normalizeName = (value) => value.toLocaleLowerCase('en-US').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+  const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const capitalize = (value) => value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 
-  if (count === 0) {
-
-    nameList.innerHTML =
-      '<div class="name-empty">No names generated.</div>';
-
-  } else {
-
-    nameList.innerHTML =
-      generatedNames
-        .map((name, index) => {
-
-          const number =
-            String(index + 1).padStart(2, '0');
-
-
-          return `
-            <div class="generated-name">
-              <span>${number}</span>
-              <strong>${escapeHtml(name)}</strong>
-            </div>
-          `;
-
-        })
-        .join('');
-
+  function getSessionNames() {
+    try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || '[]'); }
+    catch { return []; }
+  }
+  function saveSessionNames(names) {
+    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(names)); } catch {}
   }
 
+  function updateControls() {
+    if (countValueEl) countValueEl.textContent = countEl.value;
+    if (ratioValueEl) ratioValueEl.textContent = `${ratioEl.value}%`;
+  }
+  countEl.addEventListener('input', updateControls);
+  ratioEl.addEventListener('input', updateControls);
+  updateControls();
 
-  if (copyNamesButton) {
-
-    copyNamesButton.disabled =
-      generatedNames.length === 0;
-
+  function validSynthetic(value) {
+    if (!value || value.length < 4 || value.length > 15) return false;
+    if (/[^a-zA-ZÀ-ÿ]/.test(value)) return false;
+    if (/(.)\1\1/.test(value.toLowerCase())) return false;
+    if (/[bcdfghjklmnpqrstvwxyz]{4}/i.test(value)) return false;
+    if (/[aeiouy]{4}/i.test(value)) return false;
+    return true;
   }
 
-}
-
-
-// ============================================================
-// HTML ESCAPE
-// ============================================================
-
-function escapeHtml(value) {
-
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-
-}
-
-
-// ============================================================
-// GENERATE FOOTBALLER NAMES
-// ============================================================
-
-function generateFootballerNames() {
-
-  if (
-    !footballerNameData ||
-    !nameCountry ||
-    !nameCount
-  ) {
-
-    return;
-
-  }
-
-
-  const countryKey =
-    nameCountry.value;
-
-
-  const country =
-    footballerNameData.countries?.[countryKey];
-
-
-  if (!country) {
-
-    return;
-
-  }
-
-
-  let requestedCount =
-    Number(nameCount.value);
-
-
-  if (!Number.isFinite(requestedCount)) {
-    requestedCount = 1;
-  }
-
-
-  requestedCount =
-    Math.floor(requestedCount);
-
-
-  requestedCount =
-    Math.min(
-      20,
-      Math.max(
-        1,
-        requestedCount
-      )
-    );
-
-
-  const firstNames =
-    Array.isArray(country.firstNames)
-      ? country.firstNames
-      : [];
-
-
-  const lastNames =
-    Array.isArray(country.lastNames)
-      ? country.lastNames
-      : [];
-
-
-  const availableCombinations =
-    firstNames.length *
-    lastNames.length;
-
-
-  const targetCount =
-    Math.min(
-      requestedCount,
-      availableCombinations
-    );
-
-
-  const usedNames =
-    new Set();
-
-
-  generatedNames = [];
-
-
-  while (
-    generatedNames.length <
-    targetCount
-  ) {
-
-    const playerName =
-      createPlayerName(
-        country,
-        usedNames
-      );
-
-
-    if (!playerName) {
-      break;
+  function syntheticFirstName(country) {
+    const used = new Set(country.firstNames.map(normalizeName));
+    for (let i = 0; i < 80; i += 1) {
+      const syllable = randomItem(country.syllables);
+      const ending = randomItem(country.endings);
+      const candidate = capitalize(`${syllable}${ending}`);
+      const key = normalizeName(candidate);
+      if (validSynthetic(candidate) && !used.has(key)) return candidate;
     }
-
-
-    usedNames.add(playerName);
-
-    generatedNames.push(
-      playerName
-    );
-
+    return randomItem(country.firstNames);
   }
 
-
-  renderGeneratedNames();
-
-}
-
-
-// ============================================================
-// COPY ALL NAMES
-// ============================================================
-
-async function copyGeneratedNames() {
-
-  if (!generatedNames.length) {
-    return;
+  function realFirstName(country) {
+    return randomItem(country.firstNames);
   }
 
+  function makePlayer(country, makeNew) {
+    const first = makeNew ? syntheticFirstName(country) : realFirstName(country);
+    const last = randomItem(country.lastNames);
+    return { name: `${first} ${last}`, type: makeNew ? 'NEW' : 'REAL' };
+  }
 
-  const text =
-    generatedNames.join('\n');
-
-
-  try {
-
-    await navigator.clipboard.writeText(
-      text
-    );
-
-
-    showCopySuccess();
-
-  } catch (error) {
-
-    // Fallback for browsers where
-    // navigator.clipboard is unavailable.
-
-    const textarea =
-      document.createElement('textarea');
-
-
-    textarea.value = text;
-
-
-    textarea.style.position = 'fixed';
-
-    textarea.style.left = '-9999px';
-
-    textarea.style.top = '0';
-
-    textarea.style.opacity = '0';
-
-
-    document.body.appendChild(
-      textarea
-    );
-
-
-    textarea.focus();
-
-    textarea.select();
-
-
+  async function loadNames() {
+    if (nameData) return nameData;
     try {
+      const response = await fetch('./names.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`names.json returned ${response.status}`);
+      nameData = await response.json();
+      if (!nameData?.countries) throw new Error('Invalid names.json structure');
+      return nameData;
+    } catch (error) {
+      console.error('Footballer Name Generator: names.json could not be loaded.', error);
+      if (listEl) listEl.innerHTML = '<div class="name-empty">Could not load names.json. Run the site through a local web server (for example: python -m http.server).</div>';
+      return null;
+    }
+  }
 
+  function render(names) {
+    generatedNames = names;
+    if (generatedCountEl) generatedCountEl.textContent = `${names.length} ${names.length === 1 ? 'NAME' : 'NAMES'}`;
+    if (copyEl) copyEl.disabled = names.length === 0;
+    if (!names.length) {
+      listEl.innerHTML = '<div class="name-empty">No unique names are available with the current session settings.</div>';
+      return;
+    }
+    listEl.innerHTML = names.map((entry, index) => `
+      <div class="generated-name" style="animation-delay:${Math.min(index * 25, 250)}ms">
+        <span class="generated-name-number">${String(index + 1).padStart(2, '0')}</span>
+        <span class="generated-name-text">${escapeHtml(entry.name)}</span>
+        <span class="name-type">${entry.type}</span>
+      </div>`).join('');
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>'"]/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char]);
+  }
+
+  async function generate() {
+    generateEl.disabled = true;
+    const data = await loadNames();
+    if (!data) { generateEl.disabled = false; return; }
+
+    const country = data.countries[countryEl.value];
+    const count = Math.max(1, Math.min(20, Number(countEl.value) || 1));
+    const newRatio = Math.max(0, Math.min(100, Number(ratioEl.value) || 0));
+    const avoidSessionRepeats = Boolean(avoidRepeatsEl?.checked);
+    const sessionNames = new Set(avoidSessionRepeats ? getSessionNames() : []);
+    const batchNames = new Set();
+    const result = [];
+
+    // Try substantially more candidates than requested, then stop safely.
+    for (let attempts = 0; attempts < count * 150 && result.length < count; attempts += 1) {
+      const makeNew = Math.random() * 100 < newRatio;
+      const player = makePlayer(country, makeNew);
+      const key = normalizeName(player.name);
+      if (!key || batchNames.has(key) || sessionNames.has(key)) continue;
+      batchNames.add(key);
+      result.push(player);
+    }
+
+    if (avoidSessionRepeats) saveSessionNames([...sessionNames, ...result.map((entry) => normalizeName(entry.name))]);
+    render(result);
+    generateEl.disabled = false;
+  }
+
+  async function copyAll() {
+    if (!generatedNames.length) return;
+    const text = generatedNames.map((entry) => entry.name).join('\n');
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
       document.execCommand('copy');
-
-      showCopySuccess();
-
-    } catch (fallbackError) {
-
-      console.error(
-        'Could not copy names:',
-        fallbackError
-      );
-
+      textarea.remove();
     }
-
-
-    textarea.remove();
-
+    const original = copyEl.innerHTML;
+    copyEl.innerHTML = 'COPIED ✓';
+    setTimeout(() => { copyEl.innerHTML = original; }, 1400);
   }
 
-}
-
-
-// ============================================================
-// COPY BUTTON SUCCESS STATE
-// ============================================================
-
-function showCopySuccess() {
-
-  if (!copyNamesButton) {
-    return;
-  }
-
-
-  const originalHTML =
-    'COPY ALL NAMES <span>⧉</span>';
-
-
-  copyNamesButton.textContent =
-    'COPIED ✓';
-
-
-  setTimeout(() => {
-
-    copyNamesButton.innerHTML =
-      originalHTML;
-
-  }, 1400);
-
-}
-
-
-// ============================================================
-// GENERATOR EVENTS
-// ============================================================
-
-generateNamesButton?.addEventListener(
-  'click',
-  generateFootballerNames
-);
-
-
-copyNamesButton?.addEventListener(
-  'click',
-  copyGeneratedNames
-);
-
-
-// Keep number between 1 and 20.
-
-nameCount?.addEventListener(
-  'input',
-  () => {
-
-    let value =
-      Number(nameCount.value);
-
-
-    if (!Number.isFinite(value)) {
-      value = 1;
-    }
-
-
-    value =
-      Math.floor(value);
-
-
-    if (value < 1) {
-      value = 1;
-    }
-
-
-    if (value > 20) {
-      value = 20;
-    }
-
-
-    nameCount.value = value;
-
-  }
-);
-
-
-// ============================================================
-// START NAME DATA LOADING
-// ============================================================
-
-if (nameCountry && nameCount) {
-
-  loadFootballerNames();
-
-}
+  generateEl.addEventListener('click', generate);
+  copyEl?.addEventListener('click', copyAll);
+})();

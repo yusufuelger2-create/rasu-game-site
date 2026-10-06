@@ -228,19 +228,18 @@
     </section>
 
     <section class="name-generator" id="name-generator">
-      <div class="generator-noise"></div>
-      <div class="generator-inner">
-        <div class="generator-heading reveal">
+      <div class="name-generator-noise"></div>
+      <div class="name-generator-inner">
+        <div class="name-generator-heading reveal">
           <p class="eyebrow"><span></span> FOOTBALLER NAME GENERATOR</p>
-          <h2>BUILD YOUR<br /><em>SQUAD NAMES.</em></h2>
-          <p>Generate authentic footballer names for your game. Choose a country, set the number of players and build your list.</p>
+          <h2>BUILD YOUR<br /><em>NEXT PLAYER.</em></h2>
+          <p>Generate realistic footballer names by country. Mix real names with new, country-inspired names and keep your session free from repeats.</p>
         </div>
 
-        <div class="name-generator-card reveal">
-          <div class="generator-controls">
-            <label class="generator-field">
-              <span>COUNTRY</span>
-              <select id="nameCountry" aria-label="Choose country">
+        <div class="name-generator-panel reveal">
+          <div class="name-generator-controls">
+            <label><span>COUNTRY</span>
+              <select id="nameCountry">
                 <option value="germany">🇩🇪 Germany</option>
                 <option value="england">🏴 England</option>
                 <option value="france">🇫🇷 France</option>
@@ -250,32 +249,30 @@
               </select>
             </label>
 
-            <label class="generator-field">
-              <span>NUMBER OF PLAYERS</span>
-              <select id="nameCount" aria-label="Number of players">
-                <option value="1">1 Player</option>
-                <option value="5">5 Players</option>
-                <option value="10" selected>10 Players</option>
-                <option value="15">15 Players</option>
-                <option value="20">20 Players</option>
-              </select>
+            <label><span>PLAYERS <b id="nameCountValue">10</b></span>
+              <input id="nameCount" type="range" min="1" max="20" value="10" />
             </label>
 
-            <button class="generator-generate" id="generateNames" type="button">
-              GENERATE NAMES <span>↗</span>
-            </button>
+            <label class="ratio-control"><span>NEW NAME RATIO <b id="newNameRatioValue">35%</b></span>
+              <input id="newNameRatio" type="range" min="0" max="100" step="5" value="35" />
+              <small><i>REAL</i><i>NEW</i></small>
+            </label>
+
+            <label class="generator-check">
+              <input id="avoidSessionRepeats" type="checkbox" checked />
+              <span>AVOID REPEATS THIS SESSION</span>
+            </label>
+
+            <button class="generator-btn" id="generateNames" type="button">GENERATE NAMES <span>↗</span></button>
           </div>
 
-          <div class="generator-results" aria-live="polite">
-            <div class="generator-results-head">
-              <div>
-                <span class="results-label">GENERATED PLAYERS</span>
-                <strong id="generatedCount">0 PLAYERS</strong>
-              </div>
-              <button class="copy-names" id="copyNames" type="button" disabled>COPY ALL NAMES <span>⧉</span></button>
+          <div class="generated-output">
+            <div class="generated-output-head">
+              <div><span>GENERATED PLAYERS</span><strong id="generatedCount">0 NAMES</strong></div>
+              <button id="copyNames" class="copy-names" type="button" disabled>COPY ALL <span>⧉</span></button>
             </div>
-            <div class="name-list" id="nameList">
-              <div class="name-empty">Choose a country and generate your player names.</div>
+            <div id="nameList" class="name-list" aria-live="polite">
+              <div class="name-empty">Choose your settings and generate a squad.</div>
             </div>
           </div>
         </div>
