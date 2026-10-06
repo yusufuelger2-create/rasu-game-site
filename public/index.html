@@ -282,14 +282,14 @@
             <div>
               <p class="eyebrow"><span></span> REAL PLAYER NAMES</p>
               <h3>TURN REAL PLAYERS INTO<br /><em>ALTERNATIVE NAMES.</em></h3>
-              <p>Load a club squad from Transfermarkt. Each player gets two alternatives: a variation built from the original name's letters, or a completely different name from the player's country using our <strong>names.json</strong> database.</p>
+              <p>Load a club squad from SoFIFA. Each player gets two alternatives: a variation built from the original name's letters, or a completely different name from the player's country using our <strong>names.json</strong> database.</p>
             </div>
-            <div class="real-player-source team-source-controls">
-              <label><span>TEAM NAME</span><input id="squadTeamName" type="text" value="Fenerbahçe Istanbul" placeholder="e.g. Manchester United" autocomplete="off" /></label>
-              <label><span>TRANSFERMARKT CLUB ID</span><input id="squadTeamId" type="number" min="1" inputmode="numeric" value="36" placeholder="e.g. 36" /></label>
+            <div class="real-player-source">
+              <label><span>TEAM NAME</span><input id="squadTeamName" type="text" value="Fenerbahce SK" placeholder="Fenerbahce SK" autocomplete="off" /></label>
+              <label><span>SOFIFA TEAM ID</span><input id="squadClubId" type="text" inputmode="numeric" value="326" placeholder="326" autocomplete="off" /></label>
               <button class="generator-btn" id="loadSquad" type="button">LOAD SQUAD <span>↗</span></button>
-              <small class="team-source-preview" id="squadSourcePreview">transfermarkt.com.tr/fenerbahce-istanbul/kader/verein/36</small>
             </div>
+            <div class="real-player-url"><label for="squadSourceUrlPreview">SOFIFA URL</label><input id="squadSourceUrlPreview" type="text" value="https://sofifa.com/team/326/fenerbahce-sk" readonly aria-label="Generated SoFIFA squad URL" /></div>
           </div>
 
           <div class="real-player-meta">
@@ -301,7 +301,7 @@
           </div>
 
           <div id="realPlayerList" class="real-player-list" aria-live="polite">
-            <div class="name-empty">Paste a Transfermarkt squad URL and click LOAD SQUAD.</div>
+            <div class="name-empty">Enter a SoFIFA team name and ID, then click LOAD SQUAD.</div>
           </div>
         </div>
       </div>

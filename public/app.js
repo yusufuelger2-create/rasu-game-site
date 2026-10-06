@@ -374,10 +374,10 @@ contactForm?.addEventListener('submit', async (event) => {
   generateEl.addEventListener('click', generate);
   copyEl?.addEventListener('click', copyAll);
 
-  // Transfermarkt real-player alternative names
+  // SoFIFA real-player alternative names
   const squadTeamNameEl = document.querySelector('#squadTeamName');
-  const squadTeamIdEl = document.querySelector('#squadTeamId');
-  const squadSourcePreviewEl = document.querySelector('#squadSourcePreview');
+  const squadClubIdEl = document.querySelector('#squadClubId');
+  const squadSourceUrlPreviewEl = document.querySelector('#squadSourceUrlPreview');
   const loadSquadEl = document.querySelector('#loadSquad');
   const squadStatusEl = document.querySelector('#squadStatus');
   const realPlayerListEl = document.querySelector('#realPlayerList');
@@ -463,6 +463,16 @@ contactForm?.addEventListener('submit', async (event) => {
   ];
 
   function extractPlayerRecords(source) {
+    // The local proxy returns structured records when it can read the page.
+    try {
+      const parsed = JSON.parse(source);
+      if (Array.isArray(parsed?.records)) {
+        return parsed.records
+          .map((entry) => ({ name: String(entry?.name || '').trim(), countryKey: entry?.countryKey || null }))
+          .filter((entry) => entry.name.length >= 3);
+      }
+    } catch {}
+
     const records = [];
     const seen = new Set();
 
@@ -474,80 +484,92 @@ contactForm?.addEventListener('submit', async (event) => {
       records.push({ name: clean, countryKey: countryKey || null });
     }
 
-    // Best case: parse actual HTML table rows. The flag image's alt/title is used
-    // to identify the player's nationality when Transfermarkt exposes it.
+    // Best case: parse actual SoFIFA HTML. Player rows use links to /player/...
+    // and nationality is exposed by the adjacent flag image alt/title.
     if (/<html|<table|<a\b/i.test(source)) {
       try {
         const doc = new DOMParser().parseFromString(source, 'text/html');
-        doc.querySelectorAll('tr').forEach((row) => {
-          const link = row.querySelector('a[href*="/profil/spieler/"]');
-          if (!link) return;
+        doc.querySelectorAll('a[href*="/player/"]').forEach((link) => {
           const name = (link.textContent || '').replace(/\s+/g, ' ').trim();
-          const rowText = row.textContent || '';
-          const countryNode = [...row.querySelectorAll('img, [title], [alt]')].find((node) => {
+          if (!name || /^\d+\s/.test(name)) return;
+          const container = link.closest('tr') || link.parentElement?.parentElement || link.parentElement;
+          const countryNode = container ? [...container.querySelectorAll('img, [title], [alt]')].find((node) => {
             const haystack = `${node.getAttribute('alt') || ''} ${node.getAttribute('title') || ''}`;
             return countryKeyFromText(haystack);
-          });
-          const countryKey = countryKeyFromText(countryNode ? `${countryNode.getAttribute('alt') || ''} ${countryNode.getAttribute('title') || ''}` : rowText);
-          add(name, countryKey);
+          }) : null;
+          const countryKey = countryKeyFromText(countryNode ? `${countryNode.getAttribute('alt') || ''} ${countryNode.getAttribute('title') || ''}` : '');
+          add(name.replace(/^\d+\s+/, ''), countryKey);
         });
 
+        // The readable DOM may not expose /player/ URLs, but the table still
+        // contains a Name column followed by a country flag.
         if (records.length < 3) {
-          doc.querySelectorAll('a[href*="/profil/spieler/"]').forEach((link) => add(link.textContent, null));
+          doc.querySelectorAll('tr').forEach((row) => {
+            const links = [...row.querySelectorAll('a')];
+            const playerLink = links.find((link) => /\/player\//i.test(link.getAttribute('href') || ''));
+            if (!playerLink) return;
+            const name = (playerLink.textContent || '').replace(/^\d+\s+/, '').replace(/\s+/g, ' ').trim();
+            const countryNode = [...row.querySelectorAll('img, [title], [alt]')].find((node) => countryKeyFromText(`${node.getAttribute('alt') || ''} ${node.getAttribute('title') || ''}`));
+            const countryKey = countryKeyFromText(countryNode ? `${countryNode.getAttribute('alt') || ''} ${countryNode.getAttribute('title') || ''}` : '');
+            add(name, countryKey);
+          });
         }
       } catch {}
     }
 
-    // Jina/readable-text fallback. This retains the player list even when HTML
-    // is stripped; nationality falls back to the selected country in that case.
-    const repeatedImagePattern = /Image:\s+([^\n|]+?)\s+\1(?=\s|$|\|)/giu;
+    // Readable/Markdown fallback from r.jina.ai.
+    const markdownPlayerLinks = /\[([^\]]+)\]\(https?:\/\/[^\s)]+\/player\/[^)]+\)/giu;
     let match;
-    while ((match = repeatedImagePattern.exec(source))) add(match[1]);
+    while ((match = markdownPlayerLinks.exec(source))) add(match[1].replace(/^\d+\s+/, ''));
+
+    // SoFIFA readable pages can expose player links as citation-style text.
+    const plainPlayerLinks = /https?:\/\/[^\s)]+\/player\/[^\n]+\n([^\n]{3,80})/giu;
+    while ((match = plainPlayerLinks.exec(source))) add(match[1].replace(/^\d+\s+/, ''));
 
     return records;
   }
 
-  function slugifyTransfermarktTeamName(value) {
+  function slugifyTeamName(value) {
     return String(value || '')
+      .trim()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(/ß/g, 'ss')
-      .replace(/&/g, ' and ')
+      .replace(/ı/g, 'i').replace(/İ/g, 'I')
       .toLowerCase()
+      .replace(/&/g, ' and ')
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
   }
 
-  function buildTransfermarktSquadUrl() {
-    const teamName = String(squadTeamNameEl?.value || '').trim();
-    const clubId = String(squadTeamIdEl?.value || '').trim();
-    const slug = slugifyTransfermarktTeamName(teamName);
-    if (!teamName || !slug) throw new Error('Please enter a team name.');
-    if (!clubId || !/^\d+$/.test(clubId)) throw new Error('Please enter a valid Transfermarkt club ID.');
-    return `https://www.transfermarkt.com.tr/${slug}/kader/verein/${clubId}`;
+  function buildSquadUrl() {
+    const teamName = squadTeamNameEl?.value?.trim() || '';
+    const clubId = squadClubIdEl?.value?.trim() || '';
+    if (!teamName) throw new Error('Please enter a team name.');
+    if (!/^\d+$/.test(clubId)) throw new Error('SoFIFA team ID must contain numbers only.');
+    const slug = slugifyTeamName(teamName);
+    if (!slug) throw new Error('Could not create a valid team slug.');
+    return `https://sofifa.com/team/${clubId}/${slug}`;
   }
 
-  function updateSquadSourcePreview() {
-    if (!squadSourcePreviewEl) return;
+  function updateSquadUrlPreview() {
     try {
-      const url = buildTransfermarktSquadUrl();
-      squadSourcePreviewEl.textContent = url.replace(/^https?:\/\//, '');
+      const url = buildSquadUrl();
+      if (squadSourceUrlPreviewEl) squadSourceUrlPreviewEl.value = url;
     } catch {
-      squadSourcePreviewEl.textContent = 'Enter a team name and club ID';
+      if (squadSourceUrlPreviewEl) squadSourceUrlPreviewEl.value = 'Enter a valid team name and club ID.';
     }
   }
 
   async function fetchSquadText(url) {
-    const cleanUrl = url.trim();
-    if (!/^https:\/\/www\.transfermarkt\.com\.tr\//i.test(cleanUrl)) {
-      throw new Error('Invalid Transfermarkt.com.tr squad URL.');
+    if (!/^https:\/\/sofifa\.com\/team\/\d+\/[^/]+\/?$/i.test(url)) {
+      throw new Error('Only SoFIFA /team/{id}/{slug} URLs are allowed.');
     }
 
-    const encoded = encodeURIComponent(cleanUrl);
+    const encoded = encodeURIComponent(url);
     const urls = [
-      `https://r.jina.ai/${cleanUrl}`,
-      `https://api.allorigins.win/raw?url=${encoded}`,
-      cleanUrl
+      `/api/sofifa?url=${encoded}`,
+      `https://r.jina.ai/${url}`,
+      `https://api.allorigins.win/raw?url=${encoded}`
     ];
 
     let lastError = null;
@@ -561,7 +583,7 @@ contactForm?.addEventListener('submit', async (event) => {
         lastError = error;
       }
     }
-    throw lastError || new Error('Could not read the squad page.');
+    throw lastError || new Error('Could not read the SoFIFA squad page.');
   }
 
   function renderRealPlayers() {
@@ -704,7 +726,7 @@ contactForm?.addEventListener('submit', async (event) => {
     if (!loadSquadEl || !realPlayerListEl) return;
     loadSquadEl.disabled = true;
     loadSquadEl.innerHTML = 'LOADING...';
-    if (squadStatusEl) squadStatusEl.textContent = 'Reading Transfermarkt squad...';
+    if (squadStatusEl) squadStatusEl.textContent = 'Reading SoFIFA squad...';
     realPlayerListEl.innerHTML = '<div class="name-empty">Loading squad...</div>';
     alternativeNames.clear();
     usedAlternativeNames.clear();
@@ -712,11 +734,12 @@ contactForm?.addEventListener('submit', async (event) => {
     try {
       await loadNames();
       populateAlternativeCountries();
-      const url = buildTransfermarktSquadUrl();
+      const url = buildSquadUrl();
+      updateSquadUrlPreview();
       const text = await fetchSquadText(url);
       let records = extractPlayerRecords(text);
 
-      if (records.length < 1) throw new Error('No player names could be extracted from this Transfermarkt page.');
+      if (records.length < 1) throw new Error('No player names could be extracted from this SoFIFA page.');
 
       realPlayers = records;
       const known = realPlayers.filter((entry) => entry.countryKey && nameData?.countries?.[entry.countryKey]).length;
@@ -726,7 +749,7 @@ contactForm?.addEventListener('submit', async (event) => {
       renderRealPlayers();
     } catch (error) {
       realPlayers = [];
-      realPlayerListEl.innerHTML = `<div class="real-player-error">${escapeHtml(error.message || 'Could not load the squad.')}<br /><small>Check the team name and Transfermarkt club ID. If Transfermarkt blocks the reader, try again later.</small></div>`;
+      realPlayerListEl.innerHTML = `<div class="real-player-error">${escapeHtml(error.message || 'Could not load the squad.')}<br /><small>The generated URL uses /team/{id}/{slug}. If SoFIFA blocks direct access, the proxy/readable fallback will be tried automatically.</small></div>`;
       if (squadStatusEl) squadStatusEl.textContent = 'SQUAD LOAD FAILED';
     } finally {
       loadSquadEl.disabled = false;
@@ -737,13 +760,11 @@ contactForm?.addEventListener('submit', async (event) => {
   loadNames().then(() => populateAlternativeCountries());
 
   loadSquadEl?.addEventListener('click', loadSquad);
-  squadTeamNameEl?.addEventListener('input', updateSquadSourcePreview);
-  squadTeamIdEl?.addEventListener('input', updateSquadSourcePreview);
-  squadTeamNameEl?.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') loadSquad();
+  [squadTeamNameEl, squadClubIdEl].forEach((input) => {
+    input?.addEventListener('input', updateSquadUrlPreview);
+    input?.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') loadSquad();
+    });
   });
-  squadTeamIdEl?.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') loadSquad();
-  });
-  updateSquadSourcePreview();
+  updateSquadUrlPreview();
 })();
