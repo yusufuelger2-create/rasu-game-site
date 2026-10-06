@@ -276,6 +276,32 @@
             </div>
           </div>
         </div>
+
+        <div class="real-player-tool reveal" id="real-player-tool">
+          <div class="real-player-tool-head">
+            <div>
+              <p class="eyebrow"><span></span> REAL PLAYER NAMES</p>
+              <h3>TURN REAL PLAYERS INTO<br /><em>ALTERNATIVE NAMES.</em></h3>
+              <p>Load a club squad from Transfermarkt. Each player gets two alternatives: a variation built from the original name's letters, or a completely different name from the player's country using our <strong>names.json</strong> database.</p>
+            </div>
+            <div class="real-player-source">
+              <label><span>SQUAD SOURCE URL</span><input id="squadSourceUrl" type="url" value="https://www.transfermarkt.com.tr/fenerbahce-istanbul/kader/verein/36" /></label>
+              <button class="generator-btn" id="loadSquad" type="button">LOAD SQUAD <span>↗</span></button>
+            </div>
+          </div>
+
+          <div class="real-player-meta">
+            <span id="squadStatus">No squad loaded.</span>
+            <label class="real-player-country">FALLBACK COUNTRY
+              <select id="alternativeCountry"></select>
+            </label>
+            <span>COUNTRY DATA: <b id="alternativeCountryLabel">Germany</b></span>
+          </div>
+
+          <div id="realPlayerList" class="real-player-list" aria-live="polite">
+            <div class="name-empty">Paste a Transfermarkt squad URL and click LOAD SQUAD.</div>
+          </div>
+        </div>
       </div>
     </section>
   </main>

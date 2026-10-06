@@ -373,4 +373,343 @@ contactForm?.addEventListener('submit', async (event) => {
 
   generateEl.addEventListener('click', generate);
   copyEl?.addEventListener('click', copyAll);
+
+  // Transfermarkt real-player alternative names
+  const squadSourceUrlEl = document.querySelector('#squadSourceUrl');
+  const loadSquadEl = document.querySelector('#loadSquad');
+  const squadStatusEl = document.querySelector('#squadStatus');
+  const realPlayerListEl = document.querySelector('#realPlayerList');
+  const alternativeCountryLabelEl = document.querySelector('#alternativeCountryLabel');
+  const alternativeCountryEl = document.querySelector('#alternativeCountry');
+  let realPlayers = [];
+  const alternativeNames = new Map();
+  const usedAlternativeNames = new Set();
+
+  const countryAliases = {
+    germany: ['germany','deutschland','almanya'],
+    england: ['england','united kingdom','great britain','ingiltere'],
+    france: ['france','frankreich','fransa'],
+    spain: ['spain','espana','españa','spanien','ispanya'],
+    brazil: ['brazil','brasil','brasilien','brezilya'],
+    turkey: ['turkey','türkiye','turkiye','turkei','türkei','türkiye']
+  };
+
+  function countryKeyFromText(value) {
+    const text = normalizeName(value);
+    for (const [key, aliases] of Object.entries(countryAliases)) {
+      if (aliases.some((alias) => text.includes(normalizeName(alias)))) return key;
+    }
+    return null;
+  }
+
+  const ENGLISH_FALLBACK_COUNTRY = 'england';
+
+  function resolvePlayerCountryKey(player) {
+    const candidate = player?.countryKey;
+    if (candidate && nameData?.countries?.[candidate]) return candidate;
+    // Any nationality that is not represented in names.json falls back to English.
+    return nameData?.countries?.[ENGLISH_FALLBACK_COUNTRY] ? ENGLISH_FALLBACK_COUNTRY : Object.keys(nameData?.countries || {})[0];
+  }
+
+  function populateAlternativeCountries() {
+    if (!alternativeCountryEl || !nameData?.countries) return;
+    const current = alternativeCountryEl.value || countryEl.value || Object.keys(nameData.countries)[0];
+    alternativeCountryEl.innerHTML = Object.entries(nameData.countries).map(([key, country]) =>
+      `<option value="${escapeHtml(key)}">${escapeHtml(country.label || key)}</option>`
+    ).join('');
+    alternativeCountryEl.value = nameData.countries[current] ? current : Object.keys(nameData.countries)[0];
+    updateAlternativeCountryLabel();
+  }
+
+  function updateAlternativeCountryLabel() {
+    const key = alternativeCountryEl?.value || countryEl.value;
+    const label = nameData?.countries?.[key]?.label || key || '—';
+    if (alternativeCountryLabelEl) alternativeCountryLabelEl.textContent = label;
+  }
+
+  alternativeCountryEl?.addEventListener('change', updateAlternativeCountryLabel);
+  countryEl.addEventListener('change', () => {
+    if (alternativeCountryEl && !alternativeCountryEl.value) alternativeCountryEl.value = countryEl.value;
+    updateAlternativeCountryLabel();
+  });
+
+  const fallbackSquad = [
+    { name: 'Ederson', countryKey: 'brazil' },
+    { name: 'Tarık Çetin', countryKey: 'turkey' },
+    { name: 'Mert Günok', countryKey: 'turkey' },
+    { name: 'Engin Can Biterge', countryKey: 'turkey' },
+    { name: 'Jayden Oosterwolde', countryKey: 'england' },
+    { name: 'Milan Škriniar', countryKey: 'germany' },
+    { name: 'Yiğit Efe Demir', countryKey: 'turkey' },
+    { name: 'Çağlar Söyüncü', countryKey: 'turkey' },
+    { name: 'Kamil Efe Üregen', countryKey: 'turkey' },
+    { name: 'Archie Brown', countryKey: 'england' },
+    { name: 'Levent Mercan', countryKey: 'turkey' },
+    { name: 'Mert Müldür', countryKey: 'turkey' },
+    { name: 'Nélson Semedo', countryKey: 'spain' },
+    { name: 'İsmail Yüksek', countryKey: 'turkey' },
+    { name: 'Edson Álvarez', countryKey: 'spain' },
+    { name: 'Fred', countryKey: 'brazil' },
+    { name: 'Sofyan Amrabat', countryKey: 'france' },
+    { name: 'Sebastian Szymański', countryKey: 'germany' },
+    { name: 'İrfan Can Kahveci', countryKey: 'turkey' },
+    { name: 'Dorgeles Nene', countryKey: 'france' },
+    { name: 'Kerem Aktürkoğlu', countryKey: 'turkey' },
+    { name: 'Youssef En-Nesyri', countryKey: 'spain' },
+    { name: 'Cengiz Ünder', countryKey: 'turkey' },
+    { name: 'Milan de Vries', countryKey: 'germany' }
+  ];
+
+  function extractPlayerRecords(source) {
+    const records = [];
+    const seen = new Set();
+
+    function add(name, countryKey = null) {
+      const clean = String(name || '').replace(/\s+/g, ' ').trim();
+      const key = normalizeName(clean);
+      if (clean.length < 3 || clean.length > 60 || seen.has(key)) return;
+      seen.add(key);
+      records.push({ name: clean, countryKey: countryKey || null });
+    }
+
+    // Best case: parse actual HTML table rows. The flag image's alt/title is used
+    // to identify the player's nationality when Transfermarkt exposes it.
+    if (/<html|<table|<a\b/i.test(source)) {
+      try {
+        const doc = new DOMParser().parseFromString(source, 'text/html');
+        doc.querySelectorAll('tr').forEach((row) => {
+          const link = row.querySelector('a[href*="/profil/spieler/"]');
+          if (!link) return;
+          const name = (link.textContent || '').replace(/\s+/g, ' ').trim();
+          const rowText = row.textContent || '';
+          const countryNode = [...row.querySelectorAll('img, [title], [alt]')].find((node) => {
+            const haystack = `${node.getAttribute('alt') || ''} ${node.getAttribute('title') || ''}`;
+            return countryKeyFromText(haystack);
+          });
+          const countryKey = countryKeyFromText(countryNode ? `${countryNode.getAttribute('alt') || ''} ${countryNode.getAttribute('title') || ''}` : rowText);
+          add(name, countryKey);
+        });
+
+        if (records.length < 3) {
+          doc.querySelectorAll('a[href*="/profil/spieler/"]').forEach((link) => add(link.textContent, null));
+        }
+      } catch {}
+    }
+
+    // Jina/readable-text fallback. This retains the player list even when HTML
+    // is stripped; nationality falls back to the selected country in that case.
+    const repeatedImagePattern = /Image:\s+([^\n|]+?)\s+\1(?=\s|$|\|)/giu;
+    let match;
+    while ((match = repeatedImagePattern.exec(source))) add(match[1]);
+
+    return records;
+  }
+
+  async function fetchSquadText(url) {
+    const cleanUrl = url.trim();
+    if (!/^https:\/\/www\.transfermarkt\.com\.tr\//i.test(cleanUrl)) {
+      throw new Error('Please use a Transfermarkt.com.tr squad URL.');
+    }
+
+    const encoded = encodeURIComponent(cleanUrl);
+    const urls = [
+      `https://r.jina.ai/${cleanUrl}`,
+      `https://api.allorigins.win/raw?url=${encoded}`,
+      cleanUrl
+    ];
+
+    let lastError = null;
+    for (const endpoint of urls) {
+      try {
+        const response = await fetch(endpoint, { headers: { 'Accept': 'text/plain,text/html;q=0.9,*/*;q=0.8' } });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const text = await response.text();
+        if (text.length > 500) return text;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    throw lastError || new Error('Could not read the squad page.');
+  }
+
+  function renderRealPlayers() {
+    if (!realPlayerListEl) return;
+    if (!realPlayers.length) {
+      realPlayerListEl.innerHTML = '<div class="name-empty">No player names were found on this page.</div>';
+      return;
+    }
+
+    realPlayerListEl.innerHTML = realPlayers.map((player, index) => {
+      const key = normalizeName(player.name);
+      const variation = alternativeNames.get(`${key}:variation`) || '—';
+      const countryName = alternativeNames.get(`${key}:country`) || '—';
+      const countryKey = resolvePlayerCountryKey(player);
+      const isFallback = !player.countryKey || !nameData?.countries?.[player.countryKey];
+      const countryLabel = isFallback ? 'ENGLISH FALLBACK' : (nameData?.countries?.[countryKey]?.label || 'COUNTRY');
+      return `
+        <div class="real-player-row" data-player-key="${escapeHtml(key)}">
+          <span class="real-player-index">${String(index + 1).padStart(2, '0')}</span>
+          <div class="real-player-main">
+            <strong class="real-player-original" title="${escapeHtml(player.name)}">${escapeHtml(player.name)}</strong>
+            <small class="real-player-country-badge">${escapeHtml(countryLabel)}</small>
+          </div>
+          <div class="real-player-result variation-result" title="${escapeHtml(variation)}"><span>VARIATION</span><strong>${escapeHtml(variation)}</strong></div>
+          <button class="real-player-action" type="button" data-action="variation" data-player-index="${index}" aria-label="Create a letter variation of ${escapeHtml(player.name)}" title="Create name variation">↻</button>
+          <div class="real-player-result country-result" title="${escapeHtml(countryName)}"><span>COUNTRY</span><strong>${escapeHtml(countryName)}</strong></div>
+          <button class="real-player-action country-action" type="button" data-action="country" data-player-index="${index}" aria-label="Create another ${escapeHtml(countryLabel)} name for ${escapeHtml(player.name)}" title="Create same-country name; unknown countries use English">⚄</button>
+        </div>`;
+    }).join('');
+  }
+
+  function getFirstAndLast(name) {
+    const parts = String(name).trim().split(/\s+/);
+    if (parts.length < 2) return { first: parts[0] || '', last: '' };
+    return { first: parts.slice(0, -1).join(' '), last: parts.at(-1) };
+  }
+
+  function createLetterVariations(first) {
+    const source = String(first || '').trim();
+    const compact = source.replace(/[^a-zA-ZÀ-ÿ]/g, '');
+    if (compact.length < 3) return [];
+    const out = new Set();
+    const add = (value) => {
+      const candidate = capitalize(value.toLowerCase());
+      if (candidate.length >= 3 && candidate.length <= 15 && validSynthetic(candidate)) out.add(candidate);
+    };
+
+    // Prefix/suffix recombination, preserving the original letter order.
+    for (let cut = 2; cut <= Math.min(5, compact.length - 1); cut += 1) {
+      add(compact.slice(0, cut) + compact.slice(-Math.min(3, compact.length - cut)));
+    }
+    // Remove one character, swap adjacent letters, and rotate chunks.
+    for (let i = 1; i < compact.length - 1; i += 1) {
+      add(compact.slice(0, i) + compact.slice(i + 1));
+      const chars = compact.split('');
+      [chars[i - 1], chars[i]] = [chars[i], chars[i - 1]];
+      add(chars.join(''));
+    }
+    const middle = Math.floor(compact.length / 2);
+    add(compact.slice(middle) + compact.slice(0, middle));
+    add(compact.slice(0, middle + 1) + compact.slice(middle + 1).split('').reverse().join(''));
+
+    return [...out];
+  }
+
+  function generateNameVariation(player) {
+    const { first, last } = getFirstAndLast(player.name);
+    const candidates = createLetterVariations(first);
+    if (!candidates.length) return null;
+    const originalKey = normalizeName(player.name);
+    for (let i = 0; i < 100; i += 1) {
+      const candidateFirst = randomItem(candidates);
+      const full = `${candidateFirst}${last ? ` ${last}` : ''}`.trim();
+      const key = normalizeName(full);
+      if (key !== originalKey && !usedAlternativeNames.has(key)) {
+        usedAlternativeNames.add(key);
+        return full;
+      }
+    }
+    return null;
+  }
+
+  function generateCountryName(player) {
+    const key = resolvePlayerCountryKey(player);
+    const country = nameData?.countries?.[key];
+    if (!country) return null;
+
+    const blocked = new Set();
+    realPlayers.forEach((entry) => {
+      const existing = alternativeNames.get(`${normalizeName(entry.name)}:country`);
+      if (existing) {
+        const parts = existing.split(/\s+/);
+        if (parts.length > 1) blocked.add(normalizeName(parts.at(-1)));
+      }
+    });
+
+    for (let attempt = 0; attempt < 300; attempt += 1) {
+      const first = randomItem(country.firstNames || []);
+      const surname = pickUnusedSurname(country, blocked);
+      if (!first || !surname) return null;
+      const candidate = `${first} ${surname}`;
+      const candidateKey = normalizeName(candidate);
+      if (candidateKey === normalizeName(player.name)) continue;
+      if (usedAlternativeNames.has(candidateKey)) continue;
+      usedAlternativeNames.add(candidateKey);
+      return candidate;
+    }
+    return null;
+  }
+
+  async function rollAlternative(index, action) {
+    const player = realPlayers[index];
+    if (!player) return;
+    const button = realPlayerListEl?.querySelector(`[data-player-index="${index}"][data-action="${action}"]`);
+    if (button) button.disabled = true;
+
+    try {
+      await loadNames();
+      let alternative = action === 'variation'
+        ? generateNameVariation(player)
+        : generateCountryName(player);
+      if (!alternative) throw new Error(action === 'variation' ? 'No letter variation is available for this name.' : 'No unused country name is available.');
+      alternativeNames.set(`${normalizeName(player.name)}:${action}`, alternative);
+      renderRealPlayers();
+    } catch (error) {
+      if (squadStatusEl) squadStatusEl.textContent = error.message || 'Could not generate the alternative name.';
+    } finally {
+      const nextButton = realPlayerListEl?.querySelector(`[data-player-index="${index}"][data-action="${action}"]`);
+      if (nextButton) nextButton.disabled = false;
+    }
+  }
+
+  realPlayerListEl?.addEventListener('click', (event) => {
+    const button = event.target.closest('.real-player-action');
+    if (!button) return;
+    rollAlternative(Number(button.dataset.playerIndex), button.dataset.action);
+  });
+
+  async function loadSquad() {
+    if (!loadSquadEl || !realPlayerListEl) return;
+    loadSquadEl.disabled = true;
+    loadSquadEl.innerHTML = 'LOADING...';
+    if (squadStatusEl) squadStatusEl.textContent = 'Reading Transfermarkt squad...';
+    realPlayerListEl.innerHTML = '<div class="name-empty">Loading squad...</div>';
+    alternativeNames.clear();
+    usedAlternativeNames.clear();
+
+    try {
+      await loadNames();
+      populateAlternativeCountries();
+      const url = squadSourceUrlEl?.value || '';
+      const text = await fetchSquadText(url);
+      let records = extractPlayerRecords(text);
+
+      if (records.length < 3 && /fenerbahce|fenerbahçe/i.test(url)) records = fallbackSquad.map((entry) => ({ ...entry }));
+      if (records.length < 1) throw new Error('No player names could be extracted from this Transfermarkt page.');
+
+      realPlayers = records;
+      const known = realPlayers.filter((entry) => entry.countryKey && nameData?.countries?.[entry.countryKey]).length;
+      const fallbackCount = records.length - known;
+      const fallbackText = fallbackCount ? ` · ${fallbackCount} ENGLISH FALLBACK` : '';
+      if (squadStatusEl) squadStatusEl.textContent = `${records.length} PLAYERS LOADED · ${known} COUNTRY MATCHES${fallbackText} · Use ↻ for letter variation or ⚄ for a same-country name.`;
+      renderRealPlayers();
+    } catch (error) {
+      realPlayers = [];
+      realPlayerListEl.innerHTML = `<div class="real-player-error">${escapeHtml(error.message || 'Could not load the squad.')}<br /><small>If Transfermarkt blocks the reader, try again later or use the Fenerbahçe URL supplied by default.</small></div>`;
+      if (squadStatusEl) squadStatusEl.textContent = 'SQUAD LOAD FAILED';
+    } finally {
+      loadSquadEl.disabled = false;
+      loadSquadEl.innerHTML = 'LOAD SQUAD <span>↗</span>';
+    }
+  }
+
+  loadNames().then(() => populateAlternativeCountries());
+
+  loadSquadEl?.addEventListener('click', loadSquad);
+  squadSourceUrlEl?.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') loadSquad();
+  });
+
+  // Load the default Fenerbahçe squad once the generator data is ready.
+  loadSquad();
 })();
