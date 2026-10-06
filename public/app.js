@@ -174,20 +174,39 @@ contactForm?.addEventListener('submit', async (event) => {
 
   if (!countryEl || !countEl || !ratioEl || !generateEl || !listEl) return;
 
-  const SESSION_KEY = 'rasu_generated_footballer_names_v2';
+  const NAME_SESSION_KEY = 'rasu_generated_footballer_names_v3';
+  const SURNAME_SESSION_KEY = 'rasu_generated_footballer_surnames_v2';
   let nameData = null;
   let generatedNames = [];
 
-  const normalizeName = (value) => value.toLocaleLowerCase('en-US').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+  const normalizeName = (value) => String(value || '')
+    .toLocaleLowerCase('en-US')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '');
+
   const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
   const capitalize = (value) => value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 
   function getSessionNames() {
-    try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || '[]'); }
+    try { return JSON.parse(sessionStorage.getItem(NAME_SESSION_KEY) || '[]'); }
     catch { return []; }
   }
+
   function saveSessionNames(names) {
-    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(names)); } catch {}
+    try { sessionStorage.setItem(NAME_SESSION_KEY, JSON.stringify(names)); } catch {}
+  }
+
+  // Stored per country so a common surname in one country does not block it in another.
+  function getSessionSurnames() {
+    try {
+      const value = JSON.parse(sessionStorage.getItem(SURNAME_SESSION_KEY) || '{}');
+      return value && typeof value === 'object' ? value : {};
+    } catch { return {}; }
+  }
+
+  function saveSessionSurnames(value) {
+    try { sessionStorage.setItem(SURNAME_SESSION_KEY, JSON.stringify(value)); } catch {}
   }
 
   function updateControls() {
@@ -201,7 +220,7 @@ contactForm?.addEventListener('submit', async (event) => {
   function validSynthetic(value) {
     if (!value || value.length < 4 || value.length > 15) return false;
     if (/[^a-zA-ZÀ-ÿ]/.test(value)) return false;
-    if (/(.)\1\1/.test(value.toLowerCase())) return false;
+    if (/(.)\1\1/i.test(value.toLowerCase())) return false;
     if (/[bcdfghjklmnpqrstvwxyz]{4}/i.test(value)) return false;
     if (/[aeiouy]{4}/i.test(value)) return false;
     return true;
@@ -209,9 +228,9 @@ contactForm?.addEventListener('submit', async (event) => {
 
   function syntheticFirstName(country) {
     const used = new Set(country.firstNames.map(normalizeName));
-    for (let i = 0; i < 80; i += 1) {
-      const syllable = randomItem(country.syllables);
-      const ending = randomItem(country.endings);
+    for (let i = 0; i < 120; i += 1) {
+      const syllable = randomItem(country.syllables || []);
+      const ending = randomItem(country.endings || []);
       const candidate = capitalize(`${syllable}${ending}`);
       const key = normalizeName(candidate);
       if (validSynthetic(candidate) && !used.has(key)) return candidate;
@@ -223,10 +242,25 @@ contactForm?.addEventListener('submit', async (event) => {
     return randomItem(country.firstNames);
   }
 
-  function makePlayer(country, makeNew) {
+  function pickUnusedSurname(country, blockedSurnames) {
+    const pool = country.lastNames || [];
+    if (!pool.length) return null;
+
+    // First pass: completely unused surname.
+    const available = pool.filter((surname) => !blockedSurnames.has(normalizeName(surname)));
+    if (available.length) return randomItem(available);
+
+    // This fallback is only reachable when the surname pool is exhausted.
+    // With the current 80+ surnames/country and a max squad size of 20, it should
+    // normally never happen during a session.
+    return null;
+  }
+
+  function makePlayer(country, makeNew, blockedSurnames) {
     const first = makeNew ? syntheticFirstName(country) : realFirstName(country);
-    const last = randomItem(country.lastNames);
-    return { name: `${first} ${last}`, type: makeNew ? 'NEW' : 'REAL' };
+    const last = pickUnusedSurname(country, blockedSurnames);
+    if (!last) return null;
+    return { name: `${first} ${last}`, surname: last, type: makeNew ? 'NEW' : 'REAL' };
   }
 
   async function loadNames() {
@@ -239,7 +273,7 @@ contactForm?.addEventListener('submit', async (event) => {
       return nameData;
     } catch (error) {
       console.error('Footballer Name Generator: names.json could not be loaded.', error);
-      if (listEl) listEl.innerHTML = '<div class="name-empty">Could not load names.json. Run the site through a local web server (for example: python -m http.server).</div>';
+      listEl.innerHTML = '<div class="name-empty">Could not load names.json. Run the site through a local web server (for example: python -m http.server).</div>';
       return null;
     }
   }
@@ -249,7 +283,7 @@ contactForm?.addEventListener('submit', async (event) => {
     if (generatedCountEl) generatedCountEl.textContent = `${names.length} ${names.length === 1 ? 'NAME' : 'NAMES'}`;
     if (copyEl) copyEl.disabled = names.length === 0;
     if (!names.length) {
-      listEl.innerHTML = '<div class="name-empty">No unique names are available with the current session settings.</div>';
+      listEl.innerHTML = '<div class="name-empty">No unique surnames are available with the current session settings. Try another country or turn off session repeat protection.</div>';
       return;
     }
     listEl.innerHTML = names.map((entry, index) => `
@@ -269,25 +303,50 @@ contactForm?.addEventListener('submit', async (event) => {
     const data = await loadNames();
     if (!data) { generateEl.disabled = false; return; }
 
-    const country = data.countries[countryEl.value];
+    const countryKey = countryEl.value;
+    const country = data.countries[countryKey];
+    if (!country) { generateEl.disabled = false; return; }
+
     const count = Math.max(1, Math.min(20, Number(countEl.value) || 1));
     const newRatio = Math.max(0, Math.min(100, Number(ratioEl.value) || 0));
     const avoidSessionRepeats = Boolean(avoidRepeatsEl?.checked);
+
     const sessionNames = new Set(avoidSessionRepeats ? getSessionNames() : []);
+    const sessionSurnameMap = getSessionSurnames();
+    const countrySessionSurnames = new Set(
+      avoidSessionRepeats ? (sessionSurnameMap[countryKey] || []).map(normalizeName) : []
+    );
+
+    // Surname uniqueness is enforced even when session protection is OFF: no surname
+    // repeats inside the current generated squad.
+    const batchSurnames = new Set();
     const batchNames = new Set();
+    const blockedSurnames = new Set(countrySessionSurnames);
     const result = [];
 
-    // Try substantially more candidates than requested, then stop safely.
-    for (let attempts = 0; attempts < count * 150 && result.length < count; attempts += 1) {
+    for (let attempts = 0; attempts < count * 250 && result.length < count; attempts += 1) {
       const makeNew = Math.random() * 100 < newRatio;
-      const player = makePlayer(country, makeNew);
-      const key = normalizeName(player.name);
-      if (!key || batchNames.has(key) || sessionNames.has(key)) continue;
-      batchNames.add(key);
+      const player = makePlayer(country, makeNew, new Set([...blockedSurnames, ...batchSurnames]));
+      if (!player) break;
+
+      const nameKey = normalizeName(player.name);
+      const surnameKey = normalizeName(player.surname);
+      if (!nameKey || !surnameKey || batchNames.has(nameKey) || sessionNames.has(nameKey)) continue;
+      if (batchSurnames.has(surnameKey) || countrySessionSurnames.has(surnameKey)) continue;
+
+      batchNames.add(nameKey);
+      batchSurnames.add(surnameKey);
       result.push(player);
     }
 
-    if (avoidSessionRepeats) saveSessionNames([...sessionNames, ...result.map((entry) => normalizeName(entry.name))]);
+    if (avoidSessionRepeats) {
+      saveSessionNames([...sessionNames, ...result.map((entry) => normalizeName(entry.name))]);
+      const existing = new Set(sessionSurnameMap[countryKey] || []);
+      result.forEach((entry) => existing.add(normalizeName(entry.surname)));
+      sessionSurnameMap[countryKey] = [...existing];
+      saveSessionSurnames(sessionSurnameMap);
+    }
+
     render(result);
     generateEl.disabled = false;
   }
