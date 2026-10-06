@@ -227,14 +227,58 @@
       </div>
     </section>
 
-    <section class="cta" id="contact">
-      <div class="cta-noise"></div>
-      <p class="eyebrow"><span></span> READY FOR KICK-OFF?</p>
-      <h2>YOUR GAME.<br /><em>YOUR WAY.</em></h2>
-      <p>Download Pro League Soccer and start building your football story.</p>
-      <div class="hero-actions centered">
-        <a class="store-btn primary" href="https://play.google.com/store/apps/details?id=com.rasugames.pls&hl=en" target="_blank" rel="noreferrer"><span class="store-icon">▶</span><span><small>GET IT ON</small>Google Play</span></a>
-        <a class="store-btn secondary" href="#home"><span class="play-circle">↑</span><span><small>BACK TO</small>Top</span></a>
+    <section class="name-generator" id="name-generator">
+      <div class="generator-noise"></div>
+      <div class="generator-inner">
+        <div class="generator-heading reveal">
+          <p class="eyebrow"><span></span> FOOTBALLER NAME GENERATOR</p>
+          <h2>BUILD YOUR<br /><em>SQUAD NAMES.</em></h2>
+          <p>Generate authentic footballer names for your game. Choose a country, set the number of players and build your list.</p>
+        </div>
+
+        <div class="name-generator-card reveal">
+          <div class="generator-controls">
+            <label class="generator-field">
+              <span>COUNTRY</span>
+              <select id="nameCountry" aria-label="Choose country">
+                <option value="germany">🇩🇪 Germany</option>
+                <option value="england">🏴 England</option>
+                <option value="france">🇫🇷 France</option>
+                <option value="spain">🇪🇸 Spain</option>
+                <option value="brazil">🇧🇷 Brazil</option>
+                <option value="turkey">🇹🇷 Turkey</option>
+              </select>
+            </label>
+
+            <label class="generator-field">
+              <span>NUMBER OF PLAYERS</span>
+              <select id="nameCount" aria-label="Number of players">
+                <option value="1">1 Player</option>
+                <option value="5">5 Players</option>
+                <option value="10" selected>10 Players</option>
+                <option value="15">15 Players</option>
+                <option value="20">20 Players</option>
+              </select>
+            </label>
+
+            <button class="generator-generate" id="generateNames" type="button">
+              GENERATE NAMES <span>↗</span>
+            </button>
+          </div>
+
+          <div class="generator-results" aria-live="polite">
+            <div class="generator-results-head">
+              <div>
+                <span class="results-label">GENERATED PLAYERS</span>
+                <strong id="generatedCount">0 PLAYERS</strong>
+              </div>
+              <button class="copy-names" id="copyNames" type="button" disabled>COPY ALL NAMES <span>⧉</span></button>
+            </div>
+            <div class="name-list" id="nameList">
+              <div class="name-empty">Choose a country and generate your player names.</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>

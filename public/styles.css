@@ -201,3 +201,41 @@
 .contact-submit span{font-size:17px}.form-note{margin:0;color:rgba(255,255,255,.3);font-size:10px;line-height:1.5}.form-status{min-height:18px;font-size:11px;color:var(--green)}.form-status.error{color:#ff8d8d}
 @media(max-width:900px){.contact-grid{grid-template-columns:1fr;gap:45px}.contact-copy h2{font-size:60px}}
 @media(max-width:560px){.contact-section{padding:80px 5vw}.contact-form-card{padding:20px}.form-row.two,.contact-topics{grid-template-columns:1fr}.contact-copy h2{font-size:52px}.contact-topics>div{min-height:auto}}
+
+
+/* Footballer Name Generator */
+.name-generator{position:relative;overflow:hidden;padding:115px 28px;background:radial-gradient(circle at 50% 110%,rgba(72,241,141,.14),transparent 42%),#0a100e;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.name-generator:before{content:"N";position:absolute;right:3%;top:-100px;font-family:Impact,"Arial Narrow",sans-serif;font-size:520px;line-height:1;color:rgba(72,241,141,.025);pointer-events:none}
+.generator-noise{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(72,241,141,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(72,241,141,.025) 1px,transparent 1px);background-size:80px 80px;mask-image:linear-gradient(180deg,#000,transparent 85%)}
+.generator-inner{position:relative;z-index:2;max-width:1180px;margin:auto}
+.generator-heading{max-width:700px;margin-bottom:42px}
+.generator-heading h2{font-size:clamp(58px,6.5vw,88px);line-height:.86;margin:0 0 22px}
+.generator-heading>p:not(.eyebrow){max-width:570px;color:#89958f;line-height:1.75;font-size:14px}
+.name-generator-card{background:linear-gradient(145deg,rgba(17,25,24,.96),rgba(8,12,13,.98));border:1px solid rgba(72,241,141,.18);box-shadow:0 30px 80px rgba(0,0,0,.38);padding:28px}
+.generator-controls{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;padding-bottom:25px;border-bottom:1px solid var(--line)}
+.generator-field{display:flex;flex-direction:column;gap:8px}
+.generator-field>span,.results-label{font-size:9px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.48)}
+.generator-field select{width:100%;appearance:none;border:1px solid rgba(255,255,255,.12);background:#080d0d;color:#fff;border-radius:5px;padding:14px 42px 14px 14px;font:inherit;font-size:12px;outline:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,#55ef94 50%),linear-gradient(135deg,#55ef94 50%,transparent 50%);background-position:calc(100% - 18px) 18px,calc(100% - 13px) 18px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.generator-field select:focus{border-color:rgba(72,241,141,.62);box-shadow:0 0 0 3px rgba(72,241,141,.07)}
+.generator-field select option{background:#080d0d;color:#fff}
+.generator-generate{min-height:47px;border:0;border-radius:5px;background:var(--green);color:#061009;padding:0 20px;font-size:10px;font-weight:1000;letter-spacing:.12em;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:28px;transition:.2s;white-space:nowrap}
+.generator-generate:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 30px rgba(72,241,141,.16)}
+.generator-generate:disabled{opacity:.45;cursor:not-allowed}
+.generator-generate span{font-size:16px}
+.generator-results{padding-top:24px}
+.generator-results-head{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:13px}
+.generator-results-head>div{display:flex;align-items:baseline;gap:12px}
+.generator-results-head strong{font-size:10px;letter-spacing:.12em;color:#dfe7e2}
+.copy-names{border:1px solid rgba(72,241,141,.4);background:transparent;color:var(--green);padding:9px 12px;border-radius:5px;font-size:9px;font-weight:900;letter-spacing:.11em;cursor:pointer;transition:.2s}
+.copy-names:hover:not(:disabled){background:rgba(72,241,141,.08);border-color:var(--green);transform:translateY(-1px)}
+.copy-names:disabled{opacity:.35;cursor:not-allowed}
+.copy-names span{font-size:12px;margin-left:7px}
+.name-list{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07)}
+.generated-name{min-height:55px;padding:12px 15px;background:#0a1010;display:flex;align-items:center;gap:16px;transition:.2s}
+.generated-name:hover{background:#0d1714}
+.generated-name>span{font-size:9px;letter-spacing:.15em;color:rgba(72,241,141,.5);min-width:22px}
+.generated-name strong{font-size:13px;letter-spacing:.02em;color:#f1f5f2}
+.name-empty{grid-column:1/-1;padding:38px 20px;text-align:center;color:rgba(255,255,255,.35);font-size:11px;letter-spacing:.04em}
+.name-empty.error{color:#ff8d8d}
+@media(max-width:900px){.name-generator{padding:90px 20px}.generator-controls{grid-template-columns:1fr 1fr}.generator-generate{grid-column:1/-1}.name-list{grid-template-columns:1fr}.name-generator:before{font-size:360px;top:-40px}}
+@media(max-width:560px){.name-generator{padding:78px 20px}.generator-heading h2{font-size:50px}.generator-heading>p:not(.eyebrow){font-size:13px}.name-generator-card{padding:18px}.generator-controls{grid-template-columns:1fr;gap:12px}.generator-generate{grid-column:auto;width:100%}.generator-results-head{align-items:flex-start;flex-direction:column}.generator-results-head>div{width:100%;justify-content:space-between}.copy-names{width:100%;padding:12px}.generated-name{min-height:52px;padding:11px 12px}.generated-name strong{font-size:12px}}
