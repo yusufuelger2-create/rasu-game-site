@@ -284,9 +284,11 @@
               <h3>TURN REAL PLAYERS INTO<br /><em>ALTERNATIVE NAMES.</em></h3>
               <p>Load a club squad from Transfermarkt. Each player gets two alternatives: a variation built from the original name's letters, or a completely different name from the player's country using our <strong>names.json</strong> database.</p>
             </div>
-            <div class="real-player-source">
-              <label><span>SQUAD SOURCE URL</span><input id="squadSourceUrl" type="url" value="https://www.transfermarkt.com.tr/fenerbahce-istanbul/kader/verein/36" /></label>
+            <div class="real-player-source team-source-controls">
+              <label><span>TEAM NAME</span><input id="squadTeamName" type="text" value="Fenerbahçe Istanbul" placeholder="e.g. Manchester United" autocomplete="off" /></label>
+              <label><span>TRANSFERMARKT CLUB ID</span><input id="squadTeamId" type="number" min="1" inputmode="numeric" value="36" placeholder="e.g. 36" /></label>
               <button class="generator-btn" id="loadSquad" type="button">LOAD SQUAD <span>↗</span></button>
+              <small class="team-source-preview" id="squadSourcePreview">transfermarkt.com.tr/fenerbahce-istanbul/kader/verein/36</small>
             </div>
           </div>
 

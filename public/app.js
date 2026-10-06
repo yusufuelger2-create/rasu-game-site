@@ -375,7 +375,9 @@ contactForm?.addEventListener('submit', async (event) => {
   copyEl?.addEventListener('click', copyAll);
 
   // Transfermarkt real-player alternative names
-  const squadSourceUrlEl = document.querySelector('#squadSourceUrl');
+  const squadTeamNameEl = document.querySelector('#squadTeamName');
+  const squadTeamIdEl = document.querySelector('#squadTeamId');
+  const squadSourcePreviewEl = document.querySelector('#squadSourcePreview');
   const loadSquadEl = document.querySelector('#loadSquad');
   const squadStatusEl = document.querySelector('#squadStatus');
   const realPlayerListEl = document.querySelector('#realPlayerList');
@@ -505,10 +507,40 @@ contactForm?.addEventListener('submit', async (event) => {
     return records;
   }
 
+  function slugifyTransfermarktTeamName(value) {
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/ß/g, 'ss')
+      .replace(/&/g, ' and ')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  function buildTransfermarktSquadUrl() {
+    const teamName = String(squadTeamNameEl?.value || '').trim();
+    const clubId = String(squadTeamIdEl?.value || '').trim();
+    const slug = slugifyTransfermarktTeamName(teamName);
+    if (!teamName || !slug) throw new Error('Please enter a team name.');
+    if (!clubId || !/^\d+$/.test(clubId)) throw new Error('Please enter a valid Transfermarkt club ID.');
+    return `https://www.transfermarkt.com.tr/${slug}/kader/verein/${clubId}`;
+  }
+
+  function updateSquadSourcePreview() {
+    if (!squadSourcePreviewEl) return;
+    try {
+      const url = buildTransfermarktSquadUrl();
+      squadSourcePreviewEl.textContent = url.replace(/^https?:\/\//, '');
+    } catch {
+      squadSourcePreviewEl.textContent = 'Enter a team name and club ID';
+    }
+  }
+
   async function fetchSquadText(url) {
     const cleanUrl = url.trim();
     if (!/^https:\/\/www\.transfermarkt\.com\.tr\//i.test(cleanUrl)) {
-      throw new Error('Please use a Transfermarkt.com.tr squad URL.');
+      throw new Error('Invalid Transfermarkt.com.tr squad URL.');
     }
 
     const encoded = encodeURIComponent(cleanUrl);
@@ -680,11 +712,10 @@ contactForm?.addEventListener('submit', async (event) => {
     try {
       await loadNames();
       populateAlternativeCountries();
-      const url = squadSourceUrlEl?.value || '';
+      const url = buildTransfermarktSquadUrl();
       const text = await fetchSquadText(url);
       let records = extractPlayerRecords(text);
 
-      if (records.length < 3 && /fenerbahce|fenerbahçe/i.test(url)) records = fallbackSquad.map((entry) => ({ ...entry }));
       if (records.length < 1) throw new Error('No player names could be extracted from this Transfermarkt page.');
 
       realPlayers = records;
@@ -695,7 +726,7 @@ contactForm?.addEventListener('submit', async (event) => {
       renderRealPlayers();
     } catch (error) {
       realPlayers = [];
-      realPlayerListEl.innerHTML = `<div class="real-player-error">${escapeHtml(error.message || 'Could not load the squad.')}<br /><small>If Transfermarkt blocks the reader, try again later or use the Fenerbahçe URL supplied by default.</small></div>`;
+      realPlayerListEl.innerHTML = `<div class="real-player-error">${escapeHtml(error.message || 'Could not load the squad.')}<br /><small>Check the team name and Transfermarkt club ID. If Transfermarkt blocks the reader, try again later.</small></div>`;
       if (squadStatusEl) squadStatusEl.textContent = 'SQUAD LOAD FAILED';
     } finally {
       loadSquadEl.disabled = false;
@@ -706,10 +737,13 @@ contactForm?.addEventListener('submit', async (event) => {
   loadNames().then(() => populateAlternativeCountries());
 
   loadSquadEl?.addEventListener('click', loadSquad);
-  squadSourceUrlEl?.addEventListener('keydown', (event) => {
+  squadTeamNameEl?.addEventListener('input', updateSquadSourcePreview);
+  squadTeamIdEl?.addEventListener('input', updateSquadSourcePreview);
+  squadTeamNameEl?.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') loadSquad();
   });
-
-  // Load the default Fenerbahçe squad once the generator data is ready.
-  loadSquad();
+  squadTeamIdEl?.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') loadSquad();
+  });
+  updateSquadSourcePreview();
 })();
