@@ -1,11 +1,191 @@
 {
   "version": 1,
   "countries": {
-    "germany": {"label":"Germany","flag":"🇩🇪","firstNames":["Lukas","Leon","Finn","Jonas","Felix","Noah","Paul","Emil","Maximilian","Julian","Moritz","Niklas","Tim","Timo","Nico","Jan","Ben","David","Philipp","Matthias","Florian","Lennard","Fabian","Robin","Dennis","Marcel","Tobias","Simon","Mats","Kai","Erik","Jannik","Anton","Oskar","Henry","Louis"],"lastNames":["Müller","Schmidt","Schneider","Fischer","Weber","Meyer","Wagner","Becker","Schulz","Hoffmann","Schäfer","Koch","Bauer","Richter","Klein","Wolf","Schröder","Neumann","Schwarz","Zimmermann","Braun","Krüger","Hartmann","Lange","Schmitt","Werner","Krause","Meier","Lehmann","Köhler"],"syllables":["Len","Mar","Kai","Fel","Jon","Nik","Jan","Mat","Leo","Tob","Max","Fin","Ben","Er","Flo","Luk","Tim","No","Fab","Em"],"endings":["o","en","er","ian","is","el","an","ik","as","io","ar","in"],"patterns":["{syllable}{ending}"]},
-    "england": {"label":"England","flag":"🏴","firstNames":["Jack","Harry","George","Charlie","Thomas","Oscar","Jacob","William","James","Leo","Henry","Alfie","Freddie","Archie","Noah","Arthur","Theo","Isaac","Lucas","Edward","Finley","Reuben","Max","Harrison","Oliver","Ethan","Mason","Logan","Callum","Jamie","Liam","Ben","Nathan","Ryan","Jordan","Owen"],"lastNames":["Smith","Jones","Taylor","Brown","Williams","Wilson","Johnson","Davies","Patel","Robinson","Wright","Thompson","Evans","Walker","White","Roberts","Green","Hall","Thomas","Clarke","Jackson","Wood","Harris","Edwards","Turner","Martin","Cooper","Hill","Ward","Morris"],"syllables":["Har","Alf","Fin","Cal","Wil","Jam","Ben","Oli","Ed","Theo","Dan","Rob","Tom","Arch","Len","Max","Sam","Joe","Rey","Ash"],"endings":["en","er","an","on","ey","ie","ell","ian","is","ar","in"],"patterns":["{syllable}{ending}"]},
-    "france": {"label":"France","flag":"🇫🇷","firstNames":["Lucas","Hugo","Louis","Gabriel","Arthur","Jules","Leo","Nathan","Ethan","Theo","Raphael","Mathis","Tom","Paul","Antoine","Alexis","Maxime","Enzo","Noah","Adam","Baptiste","Victor","Martin","Simon","Romain","Quentin","Adrien","Julien","Thibault","Pierre","Florian","Remy","Nicolas","Theo","Valentin","Gabin"],"lastNames":["Martin","Bernard","Dubois","Thomas","Robert","Richard","Petit","Durand","Leroy","Moreau","Simon","Laurent","Lefebvre","Michel","Garcia","David","Bertrand","Roux","Vincent","Fournier","Morel","Girard","Andre","Lemoine","Mercier","Dupont","Lambert","Bonnet","Francois","Martinez"],"syllables":["Adr","Luci","Mar","Juli","Theo","Raph","Gab","Ant","Rem","Val","Nath","Max","Lou","Hug","Bap","Enz","Rom","Vic","Noe","Eli"],"endings":["el","ien","ian","is","o","on","e","et","an","in","ier"],"patterns":["{syllable}{ending}"]},
-    "spain": {"label":"Spain","flag":"🇪🇸","firstNames":["Alejandro","Daniel","Pablo","Diego","Hugo","Lucas","Mateo","Adrian","Alvaro","Sergio","Javier","Carlos","Miguel","Mario","Iker","Ivan","David","Marcos","Jorge","Ruben","Bruno","Leo","Enzo","Gonzalo","Rodrigo","Martin","Alex","Victor","Raul","Nicolas","Jaime","Hector","Fernando","Andres","Samuel","Oscar"],"lastNames":["Garcia","Rodriguez","Gonzalez","Fernandez","Lopez","Martinez","Sanchez","Perez","Gomez","Martin","Jimenez","Ruiz","Hernandez","Diaz","Moreno","Munoz","Alvarez","Romero","Alonso","Gutierrez","Navarro","Torres","Dominguez","Ramos","Vazquez","Ramirez","Vazquez","Serrano","Blanco","Molina"],"syllables":["Ale","Adri","Mar","Jav","Serg","Rodr","Gon","Mate","Raf","Pabl","Nico","Dani","Iva","Brun","Fer","And","Hect","Vict","Rub","Migu"],"endings":["o","an","el","ez","io","in","as","os","er","on","ar"],"patterns":["{syllable}{ending}"]},
-    "brazil": {"label":"Brazil","flag":"🇧🇷","firstNames":["Joao","Gabriel","Miguel","Arthur","Heitor","Bernardo","Davi","Pedro","Lucas","Matheus","Rafael","Guilherme","Enzo","Nicolas","Lorenzo","Samuel","Theo","Benjamin","Gustavo","Felipe","Rodrigo","Bruno","Vinicius","Caio","Andre","Diego","Thiago","Marcos","Daniel","Eduardo","Henrique","Leonardo","Murilo","Renan","Vitor","Igor"],"lastNames":["Silva","Santos","Oliveira","Souza","Rodrigues","Ferreira","Alves","Pereira","Lima","Gomes","Costa","Ribeiro","Martins","Carvalho","Almeida","Lopes","Soares","Fernandes","Vieira","Barbosa","Rocha","Dias","Monteiro","Mendes","Cardoso","Reis","Araujo","Teixeira","Moura","Freitas"],"syllables":["Gab","Raf","Mar","Vini","Guil","Henr","Luan","Caio","Thi","Jo","Davi","Mat","Pedr","Leo","Brun","Enr","Reni","Tia","Gui","Ale"],"endings":["o","inho","el","an","io","ez","en","as","or","im","ar"],"patterns":["{syllable}{ending}"]},
-    "turkey": {"label":"Turkey","flag":"🇹🇷","firstNames":["Arda","Kerem","Emir","Mert","Efe","Can","Kaan","Berk","Bora","Deniz","Emre","Ozan","Burak","Yusuf","Mehmet","Ahmet","Hakan","Baran","Eren","Alper","Alperen","Doruk","Tuna","Umut","Cem","Cenk","Kuzey","Yiğit","Enes","Furkan","Berke","Batuhan","Onur","Serkan","Tolga","Mete"],"lastNames":["Yilmaz","Kaya","Demir","Sahin","Celik","Yildiz","Yildirim","Ozturk","Aydin","Ozdemir","Arslan","Dogan","Kilic","Aslan","Cetin","Kara","Koc","Kurt","Polat","Bulut","Aksoy","Erdem","Tas","Guler","Kaplan","Tekin","Korkmaz","Avci","Duman","Keskin"],"syllables":["Ar","Ker","Em","Mer","Ber","Dor","Ka","Efe","Oza","Bar","Alp","Eren","Tuna","Cem","Mete","Bat","Yiğ","Umu","Kuz","Tol"],"endings":["an","er","em","en","ay","ar","in","at","ek","im","el"],"patterns":["{syllable}{ending}"]}
+    "germany": {
+      "label": "Germany",
+      "flag": "🇩🇪",
+      "firstNames": [
+        "Lukas","Leon","Finn","Jonas","Felix","Noah","Paul","Emil","Maximilian","Julian",
+        "Moritz","Niklas","Tim","Timo","Nico","Jan","Ben","David","Philipp","Matthias",
+        "Florian","Lennard","Fabian","Robin","Dennis","Marcel","Tobias","Simon","Mats","Kai",
+        "Erik","Jannik","Anton","Oskar","Henry","Louis","Alexander","Elias","Noah","Liam",
+        "Lucas","Theo","Leo","Milan","Noah","Henry","Paul","Emil","Mats","Friedrich",
+        "Johann","Karl","Wilhelm","Heinrich","Konrad","Otto","Stefan","Christian","Andreas","Thomas",
+        "Michael","Daniel","Markus","Tobias","Oliver","Christoph","Dominik","Patrick","Kevin","Justin",
+        "Sven","Thorsten","Jens","Björn","Ralf","Uwe","Frank","Holger","Dirk","Bernd",
+        "Manfred","Günter","Heinz","Werner","Klaus","Dieter","Wolfgang","Jürgen","Peter","Hans",
+        "Hermann","Gerhard","Horst","Walter","Helmut","Erich","Kurt","Willi","Karl-Heinz","Rainer"
+      ],
+      "lastNames": [
+        "Müller","Schmidt","Schneider","Fischer","Weber","Meyer","Wagner","Becker","Schulz","Hoffmann",
+        "Schäfer","Koch","Bauer","Richter","Klein","Wolf","Schröder","Neumann","Schwarz","Zimmermann",
+        "Braun","Krüger","Hartmann","Lange","Schmitt","Werner","Krause","Meier","Lehmann","Köhler",
+        "Herrmann","König","Walter","Mayer","Huber","Kaiser","Fuchs","Peters","Lang","Scholz",
+        "Möller","Weiß","Jung","Hahn","Schubert","Vogel","Friedrich","Keller","Günther","Frank",
+        "Berger","Winkler","Roth","Beck","Lorenz","Baumann","Franke","Albrecht","Schuster","Simon",
+        "Ludwig","Böhm","Winter","Kraus","Martin","Schumacher","Vogt","Stein","Jäger","Otto",
+        "Groß","Heinrich","Seidel","Schreiber","Brandt","Haase","Schulte","Kuhn","Pohl","Engel",
+        "Horn","Busch","Bergmann","Thomas","Voigt","Sauer","Arnold","Wolff","Pfeiffer","Kramer",
+        "Vimmermann","Hartung","Geyer","Ebert","Busse","Böttcher","Andrä","Blum","Kühn","Bartels"
+      ],
+      "syllables": ["Len","Mar","Kai","Fel","Jon","Nik","Jan","Mat","Leo","Tob","Max","Fin","Ben","Er","Flo","Luk","Tim","No","Fab","Em","Alex","Eli","Mil","Theo","Fried","Joh","Karl","Wil","Hein","Kon"],
+      "endings": ["o","en","er","ian","is","el","an","ik","as","io","ar","in","rich","s","ald"],
+      "patterns": ["{syllable}{ending}"]
+    },
+    "england": {
+      "label": "England",
+      "flag": "🏴",
+      "firstNames": [
+        "Jack","Harry","George","Charlie","Thomas","Oscar","Jacob","William","James","Leo",
+        "Henry","Alfie","Freddie","Archie","Noah","Arthur","Theo","Isaac","Lucas","Edward",
+        "Finley","Reuben","Max","Harrison","Oliver","Ethan","Mason","Logan","Callum","Jamie",
+        "Liam","Ben","Nathan","Ryan","Jordan","Owen","Caleb","Luke","Gabriel","Caden",
+        "Hunter","Connor","羅伊","Eli","Ezra","Aaron","Charles","Jude","Sebastian","Julian",
+        "Zack","Miles","Robert","John","Michael","David","Richard","Joseph","Charles","Thomas",
+        "Christopher","Daniel","Paul","Mark","Donald","George","Kenneth","Steven","Edward","Brian",
+        "Ronald","Anthony","Kevin","Jason","Gary","Timothy","Jose","Larry","Jeffrey","Frank",
+        "Scott","Eric","Stephen","Andrew","Raymond","Gregory","Joshua","Jerry","Tyler","Dennis",
+        "Aiden","Patrick","Peter","Harold","Theodore","Alexander","Frederick","Arthur","Bernard","Kenneth"
+      ],
+      "lastNames": [
+        "Smith","Jones","Taylor","Brown","Williams","Wilson","Johnson","Davies","Patel","Robinson",
+        "Wright","Thompson","Evans","Walker","White","Roberts","Green","Hall","Thomas","Clarke",
+        "Jackson","Wood","Harris","Edwards","Turner","Martin","Cooper","Hill","Ward","Morris",
+        "Moore","Clark","King","Baker","Lee","Campbell","Parker","Carter","Phillips","Evans",
+        "Turner","Torres","Parker","Collins","Stewart","Morris","Rogers","Cook","Morgan","Bell",
+        "Murphy","Bailey","Rivera","Cooper","Richardson","Cox","Howard","Ward","Torres","Peterson",
+        "Gray","Ramirez","James","Watson","Brooks","Kelly","Sanders","Price","Bennett","Wood",
+        "Barnes","Ross","Henderson","Coleman","Jenkins","Perry","Powell","Long","Patterson","Hughes",
+        "Flores","Washington","Butler","Simmons","Foster","Gonzales","Bryant","Alexander","Russell","Griffin",
+        "Diaz","Hayes","Myers","Ford","Hamilton","Graham","Sullivan","Wallace","Woods","Cole"
+      ],
+      "syllables": ["Har","Alf","Fin","Cal","Wil","Jam","Ben","Oli","Ed","Theo","Dan","Rob","Tom","Arch","Len","Max","Sam","Joe","Rey","Ash","Caleb","Luke","Gab","Caden","Hunt","Con","Eli","Ezra","Aar","Char"],
+      "endings": ["en","er","an","on","ey","ie","ell","ian","is","ar","in","s","ard","ie","y"],
+      "patterns": ["{syllable}{ending}"]
+    },
+    "france": {
+      "label": "France",
+      "flag": "🇫🇷",
+      "firstNames": [
+        "Lucas","Hugo","Louis","Gabriel","Arthur","Jules","Leo","Nathan","Ethan","Theo",
+        "Raphael","Mathis","Tom","Paul","Antoine","Alexis","Maxime","Enzo","Noah","Adam",
+        "Baptiste","Victor","Martin","Simon","Romain","Quentin","Adrien","Julien","Thibault","Pierre",
+        "Florian","Remy","Nicolas","Theo","Valentin","Gabin","Sacha","Mael","Timothe","Nolan",
+        "Clement","Alexandre","Matthieu","Damien","Guillaume","Benjamin","Vincent","Loic","Gauthier","Benoit",
+        "Jean","Michel","Philippe","Alain","Bernard","Patrick","Christophe","Nicolas","Gerard","Christian",
+        "Daniel","Frederic","Eric","Stephane","David","Pascal","Olivier","Laurent","Thierry","Marc",
+        "Julien","Jerome","Christophe","Alexandre","Guillaume","Maxime","Romain","Sebastien","Thomas","Antoine",
+        "Mathieu","Florian","Jonathan","Loic","Kevin","Benjamin","Gregory","Damien","Clement","Vincent",
+        "Remi","Benoit","Quentin","Adrien","Arnaud","Yohan","Mickael","Fabien","Dimitri","Ludovic"
+      ],
+      "lastNames": [
+        "Martin","Bernard","Dubois","Thomas","Robert","Richard","Petit","Durand","Leroy","Moreau",
+        "Simon","Laurent","Lefebvre","Michel","Garcia","David","Bertrand","Roux","Vincent","Fournier",
+        "Morel","Girard","Andre","Lemoine","Mercier","Dupont","Lambert","Bonnet","Francois","Martinez",
+        "Legrand","Garnier","Faure","Rousseau","Perez","Guerin","Millet","Henry","Roussel","BrBrun",
+        "Masson","Gauthier","Dumont","Poirier","Boyer","Schmitt","Brun","Colin","Vidal","Caron",
+        "Picard","Roger","Fabre","Aubert","Lefevre","Le Gall","Noel","Rey","Marchand","Leroux",
+        "Renard","David","Collet","Lacroix","Chevalier","Dupuis","Barbier","Blanchard","Giraud","Joly",
+        "Riviere","Lucas","Meunier","Perrin","Meyer","Gauthier","Dufour","Gaillard","Gerard","Lemaire",
+        "Boucher","Fleury","Royer","Klein","Carpentier","Deschamps","Imbert","Pasquier","Dupuy","Besson",
+        "Bertin","Valentin","Reynaud","Hubert","Bonneau","Poulain","Lacoste","Mace","Roy","Adam"
+      ],
+      "syllables": ["Adr","Luci","Mar","Juli","Theo","Raph","Gab","Ant","Rem","Val","Nath","Max","Lou","Hug","Bap","Enz","Rom","Vic","Noe","Eli","Sacha","Mael","Tim","Nol","Clem","Alex","Mat","Dam","Guil","Ben"],
+      "endings": ["el","ien","ian","is","o","on","e","et","an","in","ier","ard","ine","y","et"],
+      "patterns": ["{syllable}{ending}"]
+    },
+    "spain": {
+      "label": "Spain",
+      "flag": "🇪🇸",
+      "firstNames": [
+        "Alejandro","Daniel","Pablo","Diego","Hugo","Lucas","Mateo","Adrian","Alvaro","Sergio",
+        "Javier","Carlos","Miguel","Mario","Iker","Ivan","David","Marcos","Jorge","Ruben",
+        "Bruno","Leo","Enzo","Gonzalo","Rodrigo","Martin","Alex","Victor","Raul","Nicolas",
+        "Jaime","Hector","Fernando","Andres","Samuel","Oscar","Gael","Thiago","Aaron","Ian",
+        "Manuel","Antonio","Jose","Francisco","Juan","Jesus","Pedro","Javier","Rafael","Miguel",
+        "Angel","Luis","Carlos","Fernando","Alberto","Jorge","Ramon","Vicente","Enrique","Santiago",
+        "Eduardo","Roberto","Jaime","Alfonso","Salvador","Felipe","Ignacio","Gonzalo","Guillermo","Emilio",
+        "Mariano","Tomas","Joaquin","Ernesto","Cesar","Arturo","Gabriel","Mauricio","Ricardo","Victor",
+        "Marcos","Julio","Adrian","Felix","Oscar","Matias","Sebastian","Luciano","Esteban","Eugenio",
+        "Lorenzo","Cristian","Ismael","Moises","Bernardo","Efraim","Abel","Gael","Dario","Eder"
+      ],
+      "lastNames": [
+        "Garcia","Rodriguez","Gonzalez","Fernandez","Lopez","Martinez","Sanchez","Perez","Gomez","Martin",
+        "Jimenez","Ruiz","Hernandez","Diaz","Moreno","Munoz","Alvarez","Romero","Alonso","Gutierrez",
+        "Navarro","Torres","Dominguez","Ramos","Vazquez","Ramirez","Serrano","Blanco","Molina","Morales",
+        "Suarez","Ortega","Delgado","Castro","Ortiz","Rubio","Marín","Sanz","Nuñez","Iglesias",
+        "Medina","Garrido","Cortes","Castillo","Santos","Lozano","Guerrero","Cano","Prieto","Mendez",
+        "Cruz","Calvo","Gallego","Vidal","Leon","Herrera","Marquez","Pena","Cabrera","Flores",
+        "Campos","Vega","Diez","Fuentes","Carrasco","Caballero","Nieto","Reyes","Aguilar","Pascual",
+        "Santana","Herrero","Lorenzo","Montero","Hidalgo","Gimenez","Ibanez","Ferrer","Duran","Santiago",
+        "Benitez","Mora","Vicente","Vargas","Arias","Carmona","Crespo","Roman","Pastor","Soto",
+        "Saez","Velasco","Moya","Soler","Parra","Bravo","Gallardo","Rojas","Pardo","Merino"
+      ],
+      "syllables": ["Ale","Adri","Mar","Jav","Serg","Rodr","Gon","Mate","Raf","Pabl","Nico","Dani","Iva","Brun","Fer","And","Hect","Vict","Rub","Migu","Gael","Thi","Aar","Ian","Manuel","Ant","Jos","Fran","Juan","Jesus"],
+      "endings": ["o","an","el","ez","io","in","as","os","er","on","ar","a","do","rez","es"],
+      "patterns": ["{syllable}{ending}"]
+    },
+    "brazil": {
+      "label": "Brazil",
+      "flag": "🇧🇷",
+      "firstNames": [
+        "Joao","Gabriel","Miguel","Arthur","Heitor","Bernardo","Davi","Pedro","Lucas","Matheus",
+        "Rafael","Guilherme","Enzo","Nicolas","Lorenzo","Samuel","Theo","Benjamin","Gustavo","Felipe",
+        "Rodrigo","Bruno","Vinicius","Caio","Andre","Diego","Thiago","Marcos","Daniel","Eduardo",
+        "Henrique","Leonardo","Murilo","Renan","Vitor","Igor","Pietro","Noah","Breno","Emanuel",
+        "Jose","Antonio","Francisco","Carlos","Paulo","Luiz","Jose","Pedro","Lucas","Luiz",
+        "Marcos","Fernando","Roberto","Marcelo","Fabio","Alexandre","Leandro","Eduardo","Paulo","Ricardo",
+        "Sandro","Claudio","Marcio","Wagner","Luciano","Mauricio","Renato","Gilberto","Rogerio","Flavio",
+        "Anderson","Cristiano","Wellington","Jefferson","Douglas","Bruno","Diego","Thiago","Rodrigo","Cleber",
+        "Gerson","Edson","Valdir","Carlos","Nilton","Jair","Djalma","Zico","Romario","Bebeto",
+        "Ronaldo","Kaká","Neymar","Casemiro","Alisson","Ederson","Fabinho","Marcelo","Danilo","David"
+      ],
+      "lastNames": [
+        "Silva","Santos","Oliveira","Souza","Rodrigues","Ferreira","Alves","Pereira","Lima","Gomes",
+        "Costa","Ribeiro","Martins","Carvalho","Almeida","Lopes","Soares","Fernandes","Vieira","Barbosa",
+        "Rocha","Dias","Monteiro","Mendes","Cardoso","Reis","Araujo","Teixeira","Moura","Freitas",
+        "Cavalcanti","Goncalves","Pires","Correia","Neves","Nogueira","Campos","Pinto","Silveira","Borges",
+        "Machado","Nunes","Duarte","Farias","Barros","Miranda","Siqueira","Melo","Morais","Azevedo",
+        "Peixoto","Cunha","Antunes","Batista","Ramos","Bezerra","Brandao","Guedes","Lacerda","Queiroz",
+        "Resende","Sampaio","Tavares","Valenca","Xavier","Zanin","Aguiar","Arantes","Bastos","Brito",
+        "Caeiro","Canto","Carmo","Cerqueira","Chaves","Cordeiro","Coutinho","Dantas","Fagundes","Figueiredo",
+        "Fonseca","Fortes","Fraga","Goulart","Guimaraes","Junqueira","Leal","Magalhaes","Marques","Medina",
+        "Menezes","Mesquita","Montenegro","Moreira","Motta","Nascimento","Paiva","Prado","Reboucas","Salgado"
+      ],
+      "syllables": ["Gab","Raf","Mar","Vini","Guil","Henr","Luan","Caio","Thi","Jo","Davi","Mat","Pedr","Leo","Brun","Enr","Reni","Tia","Gui","Ale","Piet","Noah","Bren","Eman","Jos","Ant","Fran","Carl","Paul","Luiz"],
+      "endings": ["o","inho","el","an","io","ez","en","as","or","im","ar","ao","a","es","e"],
+      "patterns": ["{syllable}{ending}"]
+    },
+    "turkey": {
+      "label": "Turkey",
+      "flag": "🇹🇷",
+      "firstNames": [
+        "Arda","Kerem","Emir","Mert","Efe","Can","Kaan","Berk","Bora","Deniz",
+        "Emre","Ozan","Burak","Yusuf","Mehmet","Ahmet","Hakan","Baran","Eren","Alper",
+        "Alperen","Doruk","Tuna","Umut","Cem","Cenk","Kuzey","Yiğit","Enes","Furkan",
+        "Berke","Batuhan","Onur","Serkan","Tolga","Mete","Kadir","Sinan","Murat","İbrahim",
+        "Mustafa","Ali","Hüseyin","İsmail","Ömer","Halil","Ramazan","Osman","Süleyman","Yasin",
+        "Gökhan","Volkan","Uğur","Emrah","Mesut","Selçuk","Cihan","Burak","İlker","Erkan",
+        "Cengiz","Orhan","Kemal","Levent","Tolgahan","Bülent","Cemil","Taner","Zafer","Şahin",
+        "Tayfun","Sedat","Tarık","Koray","Atakan","Utku","Çağrı","Kaan","Doğukan","Mertcan",
+        "Batuhan","Tunahan","Göktürk","Alp","Pamir","Atlas","Sarp","Korel","Acar","Demir",
+        "Kuzey","Çınar","Aslan","Miran","Ayaz","Metehan","Bulut","Pars","Bumin","Kutay"
+      ],
+      "lastNames": [
+        "Yilmaz","Kaya","Demir","Sahin","Celik","Yildiz","Yildirim","Ozturk","Aydin","Ozdemir",
+        "Arslan","Dogan","Kilic","Aslan","Cetin","Kara","Koc","Kurt","Polat","Bulut",
+        "Aksoy","Erdem","Tas","Guler","Kaplan","Tekin","Korkmaz","Avci","Duman","Keskin",
+        "Yavuz","Simsek","Gunes","Kose","Bozkurt","Sen","Eren","Akbulut","Yalcin","Bas",
+        "Ozcan","Polat","Kilic","Cakir","Acar","Demirci","Kocak","Sari","Turan","Aktas",
+        "Erdogan","Korkmaz","Cicek","Kurtulus","Ozer","Yener","Kuru","Akyol","Bayrak","Tan",
+        "Tuncer","Gedik","Ozkan","Toprak","Sener","Gunduz","Can","Altun","Karakaya","Aktaş",
+        "Çelik","Öztürk","Şahin","Yılmaz","Demirtaş","Güzel","Köse","Şen","Aydın","Yıldız",
+        "Çetin","Erdoğan","Kılıç","Arslan","Bulut","Şimşek","Polat","Koç","Kurt","Özdemir",
+        "Doğan","Özcan","Yalçın","Aksoy","Güler","Korkmaz","Kaplan","Tekin","Avcı","Keskin"
+      ],
+      "syllables": ["Ar","Ker","Em","Mer","Ber","Dor","Ka","Efe","Oza","Bar","Alp","Eren","Tuna","Cem","Mete","Bat","Yiğ","Umu","Kuz","Tol","Kad","Sin","Mur","İbr","Mus","Ali","Hüs","İsm","Öm","Hal"],
+      "endings": ["an","er","em","en","ay","ar","in","at","ek","im","el","ak","az","ol","un"],
+      "patterns": ["{syllable}{ending}"]
+    }
   }
 }
